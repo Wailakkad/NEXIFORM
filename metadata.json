@@ -1,0 +1,6 @@
+{
+  "name": "NEXIFORM Hero Section",
+  "description": "A premium B2B workwear and corporate uniform brand hero experience featuring high-fidelity GSAP animations, a brand preloader, transparent scroll-aware navigation, and dynamic video integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
