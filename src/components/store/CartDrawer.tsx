@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getInitialCartState, cartReducer, CartItem, CART_UPDATE_EVENT, notifyCartUpdate, calculateDiscountedPrice } from '../../lib/cartStore';
 import { X, ShoppingBag, Trash2, Plus, Minus, Send, Phone, User, Building, MessageSquare, Mail, Sparkles, CheckCircle2, Loader2, FileText } from 'lucide-react';
-import { jsPDF } from 'jspdf';
 import { gsap } from '../../lib/gsap';
 import { saveOrder } from '../../utils/orderStore';
+import { createDocument, addBrandHeader, addClientCard, addSectionTitle, addTableHeader, addTableRow, addTotalsPanel, addSignatureBlock, addFooter, formatPrice, formatPriceFull, COLORS } from '../../lib/pdfGenerator';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -83,245 +83,61 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   const generatePDF = () => {
     try {
-      const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
-
-      // Color palette definitions
-      const primaryColor = [15, 23, 42]; // #0F172A
-      const accentColor = [59, 130, 246]; // #3B82F6
-      const textColor = [51, 65, 85]; // #334155
-      const lightBg = [248, 250, 252]; // #F8FAFC
-      const borderColor = [226, 232, 240]; // #E2E8F0
-
-      // Brand Header Banner
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(24);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('NEXIFORM', 20, 25);
-      
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(accentColor[0], accentColor[1], accentColor[2]);
-      doc.text('CONFECTION TEXTILE PROFESSIONNELLE DE PRESTIGE - MAROC', 20, 30);
-
-      // Document metadata
+      const doc = createDocument();
       const refNumber = `DEVIS-2026-${Math.floor(10000 + Math.random() * 90000)}`;
-      doc.setFontSize(10);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.setFont('helvetica', 'bold');
-      doc.text('DEVIS OFFICIEL CERTIFIÉ B2B', 120, 25);
-      
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(100, 116, 139);
-      doc.text(`N° Devis : ${refNumber}`, 120, 31);
-      doc.text(`Date : ${new Date().toLocaleDateString('fr-FR')}`, 120, 36);
-      doc.text('Validité : 30 Jours', 120, 41);
+      const dateStr = new Date().toLocaleDateString('fr-FR');
 
-      // Decorative divider
-      doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-      doc.setLineWidth(0.5);
-      doc.line(20, 46, 190, 46);
+      let y = addBrandHeader(doc, 'DEVIS OFFICIEL B2B', refNumber, dateStr, 'Valable 30 jours');
 
-      // Client Info Block card
-      doc.setFillColor(lightBg[0], lightBg[1], lightBg[2]);
-      doc.roundedRect(20, 52, 170, 45, 3, 3, 'F');
+      y = addClientCard(doc, {
+        clientName: formData.fullName || 'Client Nexiform',
+        companyName: formData.companyName || 'Non spécifiée',
+        whatsapp: formData.whatsapp,
+        email: formData.email,
+        origin: 'Boutique Digitale Nexiform',
+        territory: 'Maroc (National)',
+        notes: formData.notes,
+      }, y);
 
-      // Card Title
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('DESTINATAIRE / COORDONNÉES CLIENT', 25, 59);
+      y = addSectionTitle(doc, 'Détail de la commande', y);
 
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+      const pageMargin = 20;
+      const cols = [
+        { label: 'N°', x: pageMargin + 3 },
+        { label: 'Article / Options', x: pageMargin + 10 },
+        { label: 'Taille', x: 102, align: 'center' as const },
+        { label: 'Qté', x: 116, align: 'center' as const },
+        { label: 'P.U. (DH)', x: 148, align: 'right' as const },
+        { label: 'Total (DH)', x: 190 - pageMargin, align: 'right' as const },
+      ];
 
-      // Column 1
-      doc.setFont('helvetica', 'bold');
-      doc.text('Client :', 25, 66);
-      doc.setFont('helvetica', 'normal');
-      doc.text(formData.fullName || 'Client Nexiform', 45, 66);
+      y = addTableHeader(doc, cols, y);
 
-      doc.setFont('helvetica', 'bold');
-      doc.text('Entreprise :', 25, 72);
-      doc.setFont('helvetica', 'normal');
-      doc.text(formData.companyName || 'Non spécifiée', 45, 72);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Origine :', 25, 78);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Boutique Digitale Nexiform', 45, 78);
-
-      // Column 2
-      doc.setFont('helvetica', 'bold');
-      doc.text('WhatsApp :', 115, 66);
-      doc.setFont('helvetica', 'normal');
-      doc.text(formData.whatsapp || 'Non spécifié', 138, 66);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('E-mail :', 115, 72);
-      doc.setFont('helvetica', 'normal');
-      doc.text(formData.email || 'Non spécifié', 138, 72);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Territoire :', 115, 78);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Maroc (National)', 138, 78);
-
-      // Notes and specifics block if provided
-      if (formData.notes) {
-        doc.setFont('helvetica', 'bold');
-        doc.text('Spécifications :', 25, 84);
-        doc.setFont('helvetica', 'normal');
-        // Truncate to avoid overflow
-        const notesTruncated = formData.notes.length > 70 ? formData.notes.substring(0, 67) + '...' : formData.notes;
-        doc.text(notesTruncated, 53, 84);
-      }
-
-      const formatPricePDF = (val: number) => {
-        return Math.round(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-      };
-
-      // Table Header
-      const tableTopY = 105;
-      doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.rect(20, tableTopY, 170, 8, 'F');
-
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8.5);
-      doc.text('N°', 23, tableTopY + 5.5);
-      doc.text('Désignation de l\'Article / Options', 30, tableTopY + 5.5);
-      doc.text('Taille', 110, tableTopY + 5.5, { align: 'center' });
-      doc.text('Qté', 122, tableTopY + 5.5, { align: 'center' });
-      doc.text('P.U. HT (DH)', 153, tableTopY + 5.5, { align: 'right' });
-      doc.text('Total HT (DH)', 187, tableTopY + 5.5, { align: 'right' });
-
-      // Rows
-      let currentY = tableTopY + 8;
-      
       cartState.items.forEach((item, index) => {
-        doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-        doc.line(20, currentY + 9, 190, currentY + 9);
-
-        doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-        doc.setFontSize(8);
-        
-        // Item No
-        doc.setFont('helvetica', 'normal');
-        doc.text((index + 1).toString(), 23, currentY + 5.5);
-        
-        // Description
-        doc.setFont('helvetica', 'bold');
-        doc.text(item.product.name, 30, currentY + 4.5);
-        
-        // Logo details on secondary subline
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor(110, 110, 110);
-        const logoText = item.hasLogo ? `Marquage Logo: ${item.logoType} (+${item.discountedLogoUnitPrice} DH)` : 'Marquage Logo: Aucun';
-        doc.text(`${item.product.color} | ${logoText}`, 30, currentY + 8);
-        
-        // Reset styles for remaining columns
-        doc.setFontSize(8);
-        doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-        doc.setFont('helvetica', 'normal');
-        
-        // Size
-        doc.text(item.size, 110, currentY + 5.5, { align: 'center' });
-        
-        // Qty
-        doc.text(item.quantity.toString(), 122, currentY + 5.5, { align: 'center' });
-        
-        // Unit Price
-        const itemUnitPrice = item.discountedUnitPrice + (item.hasLogo ? item.discountedLogoUnitPrice : 0);
-        doc.text(formatPricePDF(itemUnitPrice), 153, currentY + 5.5, { align: 'right' });
-        
-        // Line Subtotal
-        doc.setFont('helvetica', 'bold');
-        doc.text(formatPricePDF(item.totalPrice), 187, currentY + 5.5, { align: 'right' });
-
-        currentY += 9;
+        const logoText = item.hasLogo ? `Logo ${item.logoType} (+${item.discountedLogoUnitPrice} DH)` : 'Sans logo';
+        const subline = `${item.product.color} | ${logoText}`;
+        const cells = [
+          { text: (index + 1).toString(), x: pageMargin + 3 },
+          { text: `${item.product.name} — ${subline}`, x: pageMargin + 10, bold: true, fontSize: 7 as const },
+          { text: item.size, x: 102, align: 'center' as const },
+          { text: item.quantity.toString(), x: 116, align: 'center' as const },
+          { text: formatPrice(item.discountedUnitPrice + (item.hasLogo ? item.discountedLogoUnitPrice : 0)), x: 148, align: 'right' as const },
+          { text: formatPrice(item.totalPrice), x: 190 - pageMargin, align: 'right' as const, bold: true },
+        ];
+        y = addTableRow(doc, cells, y, index === cartState.items.length - 1);
       });
 
-      // Totals Calculations Box (HT, TVA, TTC)
-      currentY += 5;
-      doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-      doc.line(110, currentY, 190, currentY);
+      y += 4;
+      const htAmount = cartState.totalAmount;
+      const tvaAmount = htAmount * 0.2;
+      const ttcAmount = htAmount * 1.2;
 
-      doc.setFontSize(8.5);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+      y = addTotalsPanel(doc, htAmount, tvaAmount, ttcAmount, y, 'Tarification B2B dégressive appliquée');
 
-      // Total HT
-      doc.text('Total HT :', 145, currentY + 5);
-      doc.setFont('helvetica', 'bold');
-      doc.text(`${formatPricePDF(cartState.totalAmount)} DH`, 187, currentY + 5, { align: 'right' });
+      y += 8;
+      y = addSignatureBlock(doc, y);
 
-      // TVA (20%)
-      doc.setFont('helvetica', 'normal');
-      doc.text('TVA (20%) :', 145, currentY + 10);
-      doc.setFont('helvetica', 'bold');
-      const tvaValue = cartState.totalAmount * 0.2;
-      doc.text(`${formatPricePDF(tvaValue)} DH`, 187, currentY + 10, { align: 'right' });
-
-      // Total TTC
-      doc.setFontSize(10);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Net à payer TTC :', 145, currentY + 16);
-      doc.setFont('helvetica', 'bold');
-      const ttcValue = cartState.totalAmount * 1.2;
-      doc.text(`${formatPricePDF(ttcValue)} DH`, 187, currentY + 16, { align: 'right' });
-
-      // Remise Tier Info Note
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(7.5);
-      doc.setTextColor(16, 185, 129);
-      doc.text('* Tarification dégressive spéciale B2B appliquée avec succès.', 110, currentY + 22);
-
-      // Signature blocks
-      const sigY = currentY + 28;
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Le Client (Pour Accord)', 35, sigY);
-      doc.text('Ateliers NEXIFORM Maroc', 135, sigY);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 140);
-      doc.text('(Signature électronique & cachet)', 30, sigY + 5);
-      doc.text('(Document certifié d\'origine)', 132, sigY + 5);
-
-      // Decorative production rules box at bottom
-      doc.setFillColor(lightBg[0], lightBg[1], lightBg[2]);
-      doc.roundedRect(20, sigY + 12, 170, 16, 2, 2, 'F');
-      
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('VALIDATION TECHNIQUE ET CONFECTION :', 23, sigY + 17);
-      
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-      doc.text('Ce projet de devis intègre les remises dégressives de l\'atelier. La maquette et le Bon à Tirer (BAT) broderie vous seront', 23, sigY + 21);
-      doc.text('transmis sur WhatsApp pour accord écrit avant lancement définitif de la découpe laser des tissus.', 23, sigY + 24);
-
-      // Absolute Footer
-      doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-      doc.setLineWidth(0.5);
-      doc.line(20, 274, 190, 274);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(148, 163, 184);
-      doc.text('NEXIFORM Maroc S.A.R.L - Ateliers de Confection Moderne, Boulevard d\'Anfa, Casablanca.', 105, 279, { align: 'center' });
-      doc.text('E-mail: contact@nexiform.ma | WhatsApp: +212 6 61 00 00 00 | Document certifié conforme.', 105, 283, { align: 'center' });
-
+      addFooter(doc);
       doc.save(`devis_nexiform_${(formData.companyName || 'client').toLowerCase().replace(/[^a-z0-9]/g, '_')}.pdf`);
     } catch (err) {
       console.error('Error generating PDF:', err);

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Clipboard, Plus, Trash2, Send, Phone, User, Building, Mail, Sparkles, CheckCircle2, ChevronDown, Loader2, FileText, Check } from 'lucide-react';
-import { jsPDF } from 'jspdf';
 import { storeData } from '../../data/store';
 import { gsap } from '../../lib/gsap';
 import { saveOrder } from '../../utils/orderStore';
+import { createDocument, addBrandHeader, addClientCard, addSectionTitle, addTableHeader, addTableRow, addSignatureBlock, addFooter, addProcessSteps, formatPrice, COLORS } from '../../lib/pdfGenerator';
 
 interface BonCommandeModalProps {
   isOpen: boolean;
@@ -88,181 +88,50 @@ export default function BonCommandeModal({ isOpen, onClose }: BonCommandeModalPr
 
   const generatePDF = () => {
     try {
-      const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
-
-      // Color palette definitions
-      const primaryColor = [15, 23, 42]; // #0F172A
-      const accentColor = [59, 130, 246]; // #3B82F6
-      const textColor = [51, 65, 85]; // #334155
-      const lightBg = [248, 250, 252]; // #F8FAFC
-      const borderColor = [226, 232, 240]; // #E2E8F0
-
-      // Brand Header Banner
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(24);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('NEXIFORM', 20, 25);
-      
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(accentColor[0], accentColor[1], accentColor[2]);
-      doc.text('ATELIERS DE CONFECTION PRESTIGE - CASABLANCA, MAROC', 20, 30);
-
-      // Quote & Document metadata
+      const doc = createDocument();
       const refNumber = `BC-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-      doc.setFontSize(10);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.setFont('helvetica', 'bold');
-      doc.text('PROJET DE DEVIS / BON DE COMMANDE B2B', 120, 25);
-      
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(100, 116, 139);
-      doc.text(`Reference : ${refNumber}`, 120, 31);
-      doc.text(`Date : ${new Date().toLocaleDateString('fr-FR')}`, 120, 36);
-      doc.text('Statut : Valide & Transmis par e-mail', 120, 41);
+      const dateStr = new Date().toLocaleDateString('fr-FR');
 
-      // Horizontal decorative split
-      doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-      doc.setLineWidth(0.5);
-      doc.line(20, 46, 190, 46);
+      let y = addBrandHeader(doc, 'BON DE COMMANDE B2B', refNumber, dateStr, 'Transmis par e-mail');
 
-      // Client Info Block card
-      doc.setFillColor(lightBg[0], lightBg[1], lightBg[2]);
-      doc.roundedRect(20, 52, 170, 45, 3, 3, 'F');
+      y = addClientCard(doc, {
+        clientName: fullName || 'Client Nexiform',
+        companyName: companyName || 'Non spécifiée',
+        whatsapp: whatsapp,
+        email: email,
+        industry: industryType,
+        territory: 'Maroc (National / Distant)',
+      }, y);
 
-      // Card Title
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('INFORMATIONS CLIENT & ENTREPRISE', 25, 59);
+      y = addSectionTitle(doc, 'Articles demandés', y);
 
-      // Meta keys and values
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
+      const pageMargin = 20;
+      const cols = [
+        { label: 'N°', x: pageMargin + 3 },
+        { label: 'Article / Modèle', x: pageMargin + 10 },
+        { label: 'Qté', x: 120, align: 'center' as const },
+        { label: 'Marquage', x: 190 - pageMargin, align: 'right' as const },
+      ];
 
-      // Column 1
-      doc.setFont('helvetica', 'bold');
-      doc.text('Responsable :', 25, 66);
-      doc.setFont('helvetica', 'normal');
-      doc.text(fullName || 'Client Nexiform', 52, 66);
+      y = addTableHeader(doc, cols, y);
 
-      doc.setFont('helvetica', 'bold');
-      doc.text('Entreprise :', 25, 72);
-      doc.setFont('helvetica', 'normal');
-      doc.text(companyName || 'Non specifiee', 52, 72);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Secteur :', 25, 78);
-      doc.setFont('helvetica', 'normal');
-      doc.text(industryType, 52, 78);
-
-      // Column 2
-      doc.setFont('helvetica', 'bold');
-      doc.text('WhatsApp :', 115, 66);
-      doc.setFont('helvetica', 'normal');
-      doc.text(whatsapp || 'Non specifie', 138, 66);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('E-mail :', 115, 72);
-      doc.setFont('helvetica', 'normal');
-      doc.text(email || 'Non specifie', 138, 72);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Territoire :', 115, 78);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Maroc (National / Distant)', 138, 78);
-
-      // Table Header definitions
-      const tableTopY = 105;
-      doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.rect(20, tableTopY, 170, 8, 'F');
-
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.text('N°', 23, tableTopY + 5.5);
-      doc.text('Description de l\'Article / Modele demande', 30, tableTopY + 5.5);
-      doc.text('Quantite', 122, tableTopY + 5.5, { align: 'center' });
-      doc.text('Marquage Logo', 187, tableTopY + 5.5, { align: 'right' });
-
-      // Build Table rows dynamically
-      let currentY = tableTopY + 8;
-      doc.setFontSize(9);
-      
       items.forEach((item, index) => {
-        doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-        doc.line(20, currentY + 9, 190, currentY + 9);
-
-        doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-        doc.setFont('helvetica', 'normal');
-        
-        doc.text((index + 1).toString(), 23, currentY + 5.5);
-        
-        doc.setFont('helvetica', 'bold');
-        doc.text(item.productName || 'Article Personnalise Nexiform', 30, currentY + 5.5);
-        
-        doc.setFont('helvetica', 'normal');
-        doc.text(item.quantity.toString(), 122, currentY + 5.5, { align: 'center' });
-        
-        const logoDesc = item.hasLogo ? `Oui (${item.logoType})` : 'Non';
-        doc.text(logoDesc, 187, currentY + 5.5, { align: 'right' });
-
-        currentY += 9;
+        const cells = [
+          { text: (index + 1).toString(), x: pageMargin + 3 },
+          { text: item.productName || 'Article Personnalisé Nexiform', x: pageMargin + 10, bold: true },
+          { text: item.quantity.toString(), x: 120, align: 'center' as const },
+          { text: item.hasLogo ? `Oui (${item.logoType})` : 'Non', x: 190 - pageMargin, align: 'right' as const },
+        ];
+        y = addTableRow(doc, cells, y, index === items.length - 1);
       });
 
-      // Terms of validation box
-      currentY += 12;
-      doc.setDrawColor(accentColor[0], accentColor[1], accentColor[2]);
-      doc.setLineWidth(0.8);
-      doc.line(20, currentY, 20, currentY + 30);
+      y += 6;
+      y = addProcessSteps(doc, y);
 
-      doc.setFillColor(243, 248, 255);
-      doc.rect(20.4, currentY, 169.6, 30, 'F');
+      y += 8;
+      y = addSignatureBlock(doc, y);
 
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('PROCEDURE COMMERCIALE & ETAPES DE PRODUCTION :', 25, currentY + 6);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
-      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-      doc.text('1. Prise de contact : Un conseiller de l\'Atelier Nexiform valide les dimensions et options de marquage.', 25, currentY + 12);
-      doc.text('2. Envoi du BAT : Notre infographiste concoit et vous envoie un Bon a Tirer visuel gratuit pour validation.', 25, currentY + 17);
-      doc.text('3. Devis certifie : Suite a votre accord sur le BAT, nous certifions la facturation finale et lancons la couture.', 25, currentY + 22);
-      doc.text('4. Livraison : Vos articles sur-mesure vous sont livres a l\'adresse de votre choix avec suivi logistique Maroc.', 25, currentY + 27);
-
-      // Signatures
-      const sigY = currentY + 38;
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Signature Client', 40, sigY);
-      doc.text('La Direction Nexiform', 140, sigY);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 140);
-      doc.text('(Document signe numeriquement)', 35, sigY + 5);
-      doc.text('(Cachet officiel de l\'entreprise)', 135, sigY + 5);
-
-      // Footer legal address lines
-      doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-      doc.setLineWidth(0.5);
-      doc.line(20, 274, 190, 274);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(148, 163, 184);
-      doc.text('NEXIFORM Maroc S.A.R.L - Ateliers de Confection Moderne, Boulevard d\'Anfa, Casablanca.', 105, 279, { align: 'center' });
-      doc.text('E-mail: contact@nexiform.ma | WhatsApp: +212 6 61 00 00 00 | Document certifie conforme.', 105, 283, { align: 'center' });
-
+      addFooter(doc);
       doc.save(`devis_nexiform_${(companyName || 'client').toLowerCase().replace(/[^a-z0-9]/g, '_')}.pdf`);
     } catch (err) {
       console.error('Error generating PDF:', err);

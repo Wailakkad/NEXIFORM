@@ -167,7 +167,6 @@ export default function Hero({ preloaded }: HeroProps) {
           loop
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
-          poster="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1920"
         >
           <source 
             src="https://res.cloudinary.com/dhkyla1rv/video/upload/v1782816204/video-background.mp4" 

@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { getOrders, updateOrderStatus, deleteOrder, Order, OrderItem } from '../../utils/orderStore';
 import { storeData } from '../../data/store';
-import { jsPDF } from 'jspdf';
+import { createDocument, addBrandHeader, addClientCard, addSectionTitle, addTableHeader, addTableRow, addTotalsPanel, addSignatureBlock, addFooter, addProcessSteps, formatPrice, formatPriceFull, COLORS } from '../../lib/pdfGenerator';
 import { gsap } from '../../lib/gsap';
 import credentials from '../../data/adminCredentials.json';
 
@@ -102,249 +102,83 @@ export default function AdminDashboard() {
     }
   };
 
-  // Regeneration of official quote for dynamic items inside table/detail drawer
   const regeneratePDF = (order: Order) => {
     try {
-      const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
-
-      const primaryColor = [15, 23, 42];
-      const accentColor = [59, 130, 246];
-      const textColor = [51, 65, 85];
-      const lightBg = [248, 250, 252];
-      const borderColor = [226, 232, 240];
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(24);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('NEXIFORM', 20, 25);
-      
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(accentColor[0], accentColor[1], accentColor[2]);
-      doc.text('CONFECTION TEXTILE PROFESSIONNELLE DE PRESTIGE - MAROC', 20, 30);
-
+      const doc = createDocument();
       const isAutonome = order.type === 'bon_commande_autonome';
-      const docTitle = isAutonome ? 'BON DE COMMANDE DE CONFECTION SUR-MESURE B2B' : 'DEVIS OFFICIEL CERTIFIÉ B2B';
+      const docTitle = isAutonome ? 'BON DE COMMANDE B2B' : 'DEVIS OFFICIEL B2B';
+      const statusLabel = order.status === 'en_preparation' ? 'En couture' : order.status === 'bat_envoye' ? 'BAT envoyé' : order.status;
 
-      doc.setFontSize(10);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.setFont('helvetica', 'bold');
-      doc.text(docTitle, 120, 25);
-      
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(100, 116, 139);
-      doc.text(`N° Ref : ${order.reference}`, 120, 31);
-      doc.text(`Date : ${order.date}`, 120, 36);
-      doc.text(`Statut : ${order.status.toUpperCase()}`, 120, 41);
+      let y = addBrandHeader(doc, docTitle, order.reference, order.date, statusLabel);
 
-      doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-      doc.setLineWidth(0.5);
-      doc.line(20, 46, 190, 46);
+      y = addClientCard(doc, {
+        clientName: order.clientName,
+        companyName: order.companyName,
+        whatsapp: order.whatsapp,
+        email: order.email,
+        industry: order.industry,
+        territory: 'Maroc (National / Distant)',
+        notes: order.notes,
+      }, y);
 
-      // Client Info Block card
-      doc.setFillColor(lightBg[0], lightBg[1], lightBg[2]);
-      doc.roundedRect(20, 52, 170, 45, 3, 3, 'F');
+      y = addSectionTitle(doc, isAutonome ? 'Détail de la commande personnalisée' : 'Détail de la commande', y);
 
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('COORDONNÉES CLIENT & ENTREPRISE', 25, 59);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Client :', 25, 66);
-      doc.setFont('helvetica', 'normal');
-      doc.text(order.clientName || 'Non précisé', 45, 66);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Entreprise :', 25, 72);
-      doc.setFont('helvetica', 'normal');
-      doc.text(order.companyName || 'Non spécifiée', 45, 72);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Secteur :', 25, 78);
-      doc.setFont('helvetica', 'normal');
-      doc.text(order.industry || 'Non spécifié', 45, 78);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('WhatsApp :', 115, 66);
-      doc.setFont('helvetica', 'normal');
-      doc.text(order.whatsapp || 'Non spécifié', 138, 66);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('E-mail :', 115, 72);
-      doc.setFont('helvetica', 'normal');
-      doc.text(order.email || 'Non spécifié', 138, 72);
-
-      doc.setFont('helvetica', 'bold');
-      doc.text('Territoire :', 115, 78);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Maroc (National / Distant)', 138, 78);
-
-      if (order.notes) {
-        doc.setFont('helvetica', 'bold');
-        doc.text('Notes / Spécifications :', 25, 84);
-        doc.setFont('helvetica', 'normal');
-        const notesTruncated = order.notes.length > 70 ? order.notes.substring(0, 67) + '...' : order.notes;
-        doc.text(notesTruncated, 63, 84);
-      }
-
-      const tableTopY = 105;
-      doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.rect(20, tableTopY, 170, 8, 'F');
-
-      const formatPricePDF = (val: number) => {
-        return Math.round(val).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-      };
+      const pageMargin = 20;
 
       if (!isAutonome) {
-        doc.setTextColor(255, 255, 255);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8.5);
-        doc.text('N°', 23, tableTopY + 5.5);
-        doc.text('Désignation de l\'Article / Options', 30, tableTopY + 5.5);
-        doc.text('Taille', 110, tableTopY + 5.5, { align: 'center' });
-        doc.text('Qté', 122, tableTopY + 5.5, { align: 'center' });
-        doc.text('P.U. HT (DH)', 153, tableTopY + 5.5, { align: 'right' });
-        doc.text('Total HT (DH)', 187, tableTopY + 5.5, { align: 'right' });
+        const cols = [
+          { label: 'N°', x: pageMargin + 3 },
+          { label: 'Article / Options', x: pageMargin + 10 },
+          { label: 'Qté', x: 110, align: 'center' as const },
+          { label: 'P.U. HT (DH)', x: 153, align: 'right' as const },
+          { label: 'Total HT (DH)', x: 190 - pageMargin, align: 'right' as const },
+        ];
 
-        let currentY = tableTopY + 8;
+        y = addTableHeader(doc, cols, y);
+
         order.items.forEach((item, index) => {
-          doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-          doc.line(20, currentY + 9, 190, currentY + 9);
-
-          doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-          doc.setFontSize(8);
-          
-          doc.setFont('helvetica', 'normal');
-          doc.text((index + 1).toString(), 23, currentY + 5.5);
-          
-          doc.setFont('helvetica', 'bold');
-          doc.text(item.name, 30, currentY + 5.5);
-          
-          doc.setFontSize(8);
-          doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-          doc.setFont('helvetica', 'normal');
-          
-          doc.text(item.options.includes('Taille:') ? item.options.split('Taille:')[1].split('|')[0].trim() : 'Unique', 110, currentY + 5.5, { align: 'center' });
-          doc.text(item.quantity.toString(), 122, currentY + 5.5, { align: 'center' });
-          doc.text(formatPricePDF(item.price || 0), 153, currentY + 5.5, { align: 'right' });
-          doc.text(formatPricePDF(item.totalPrice || 0), 187, currentY + 5.5, { align: 'right' });
-
-          currentY += 9;
+          const cells = [
+            { text: (index + 1).toString(), x: pageMargin + 3 },
+            { text: item.name, x: pageMargin + 10, bold: true },
+            { text: item.quantity.toString(), x: 110, align: 'center' as const },
+            { text: formatPrice(item.price || 0), x: 153, align: 'right' as const },
+            { text: formatPrice(item.totalPrice || 0), x: 190 - pageMargin, align: 'right' as const, bold: true },
+          ];
+          y = addTableRow(doc, cells, y, index === order.items.length - 1);
         });
 
-        // Totals
-        currentY += 5;
-        doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-        doc.line(110, currentY, 190, currentY);
-
-        doc.setFontSize(8.5);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-
+        y += 4;
         const htAmount = order.totalAmount ? order.totalAmount / 1.2 : 0;
-        doc.text('Total HT :', 145, currentY + 5);
-        doc.setFont('helvetica', 'bold');
-        doc.text(`${formatPricePDF(htAmount)} DH`, 187, currentY + 5, { align: 'right' });
-
-        doc.setFont('helvetica', 'normal');
-        doc.text('TVA (20%) :', 145, currentY + 10);
-        doc.setFont('helvetica', 'bold');
-        doc.text(`${formatPricePDF(htAmount * 0.2)} DH`, 187, currentY + 10, { align: 'right' });
-
-        doc.setFontSize(10);
-        doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-        doc.text('Net à payer TTC :', 145, currentY + 16);
-        doc.setFont('helvetica', 'bold');
-        doc.text(`${formatPricePDF(order.totalAmount || 0)} DH`, 187, currentY + 16, { align: 'right' });
+        y = addTotalsPanel(doc, htAmount, htAmount * 0.2, order.totalAmount || 0, y, 'Tarification B2B dégressive appliquée');
       } else {
-        // Autonomous custom order view
-        doc.setTextColor(255, 255, 255);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8.5);
-        doc.text('N°', 23, tableTopY + 5.5);
-        doc.text('Description de l\'Article demandé / Confection', 30, tableTopY + 5.5);
-        doc.text('Quantité', 122, tableTopY + 5.5, { align: 'center' });
-        doc.text('Marquage Logo', 187, tableTopY + 5.5, { align: 'right' });
+        const cols = [
+          { label: 'N°', x: pageMargin + 3 },
+          { label: 'Article demandé', x: pageMargin + 10 },
+          { label: 'Qté', x: 110, align: 'center' as const },
+          { label: 'Marquage', x: 190 - pageMargin, align: 'right' as const },
+        ];
 
-        let currentY = tableTopY + 8;
+        y = addTableHeader(doc, cols, y);
+
         order.items.forEach((item, index) => {
-          doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-          doc.line(20, currentY + 9, 190, currentY + 9);
-
-          doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-          doc.setFontSize(8);
-          
-          doc.setFont('helvetica', 'normal');
-          doc.text((index + 1).toString(), 23, currentY + 5.5);
-          
-          doc.setFont('helvetica', 'bold');
-          doc.text(item.name, 30, currentY + 5.5);
-          
-          doc.setFont('helvetica', 'normal');
-          doc.text(item.quantity.toString(), 122, currentY + 5.5, { align: 'center' });
-          doc.text(item.options || 'Aucun marquage', 187, currentY + 5.5, { align: 'right' });
-
-          currentY += 9;
+          const cells = [
+            { text: (index + 1).toString(), x: pageMargin + 3 },
+            { text: item.name, x: pageMargin + 10, bold: true },
+            { text: item.quantity.toString(), x: 110, align: 'center' as const },
+            { text: item.options || 'Aucun marquage', x: 190 - pageMargin, align: 'right' as const },
+          ];
+          y = addTableRow(doc, cells, y, index === order.items.length - 1);
         });
 
-        // Procedural agreement
-        currentY += 15;
-        doc.setDrawColor(accentColor[0], accentColor[1], accentColor[2]);
-        doc.setLineWidth(0.8);
-        doc.line(20, currentY, 20, currentY + 30);
-
-        doc.setFillColor(243, 248, 255);
-        doc.rect(20.4, currentY, 169.6, 30, 'F');
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-        doc.text('PROCEDURE COMMERCIALE & ETAPES DE PRODUCTION :', 25, currentY + 6);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(textColor[0], textColor[1], textColor[2]);
-        doc.text('1. Prise de contact : Un conseiller de l\'Atelier Nexiform valide les dimensions et options de marquage.', 25, currentY + 12);
-        doc.text('2. Envoi du BAT : Notre infographiste concoit et vous envoie un Bon a Tirer visuel gratuit pour validation.', 25, currentY + 17);
-        doc.text('3. Devis certifie : Suite a votre accord sur le BAT, nous certifions la facturation finale et lancons la couture.', 25, currentY + 22);
-        doc.text('4. Livraison : Vos articles sur-mesure vous sont livres a l\'adresse de votre choix avec suivi logistique Maroc.', 25, currentY + 27);
+        y += 6;
+        y = addProcessSteps(doc, y);
       }
 
-      // Legal bottom
-      const sigY = 230;
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-      doc.text('Signature Client', 40, sigY);
-      doc.text('La Direction Nexiform', 140, sigY);
+      y += 8;
+      y = addSignatureBlock(doc, y);
 
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 140);
-      doc.text('(Document certifié valide par le système)', 31, sigY + 5);
-      doc.text('(Cachet officiel de l\'entreprise)', 135, sigY + 5);
-
-      doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-      doc.setLineWidth(0.5);
-      doc.line(20, 274, 190, 274);
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(148, 163, 184);
-      doc.text('NEXIFORM Maroc S.A.R.L - Ateliers de Confection Moderne, Boulevard d\'Anfa, Casablanca.', 105, 279, { align: 'center' });
-      doc.text('E-mail: contact@nexiform.ma | WhatsApp: +212 6 61 00 00 00 | Document certifie conforme.', 105, 283, { align: 'center' });
-
-      doc.save(`${order.reference.toLowerCase()}.pdf`);
+      addFooter(doc);
+      doc.save(`${order.reference.toLowerCase().replace(/[^a-z0-9]/g, '_')}.pdf`);
     } catch (err) {
       console.error('Error generating PDF:', err);
     }

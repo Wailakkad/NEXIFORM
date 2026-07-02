@@ -67,7 +67,6 @@ export default function Header({ preloaded }: HeaderProps) {
   const navLinks = [
     { label: 'Accueil', href: '#/' },
     { label: 'Boutique B2B', href: '#/store' },
-    { label: 'Bon de Commande', href: '#/bon-commande' },
     { label: 'À Propos', href: '#/about' },
     { label: 'Secteurs', href: '#/about' },
     { label: 'Contact', href: '#/about' },
