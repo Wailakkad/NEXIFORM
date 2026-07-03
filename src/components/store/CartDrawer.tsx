@@ -155,20 +155,17 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const intervals = [500, 1000, 1600, 2200, 2800];
     
     intervals.forEach((delay, idx) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         setSubmitStep(idx + 1);
         
-        // At the final step, complete simulation and trigger automatic PDF download
         if (idx === intervals.length - 1) {
           setIsSubmitting(false);
           setIsSuccess(true);
           
-          // Generate and trigger auto-download of the PDF Devis document
           generatePDF();
 
-          // Save to local B2B order store
           try {
-            saveOrder({
+            await saveOrder({
               type: 'devis_boutique',
               reference: `DEVIS-2026-${Math.floor(10000 + Math.random() * 90000)}`,
               clientName: formData.fullName,
@@ -177,7 +174,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               whatsapp: formData.whatsapp,
               industry: 'E-Commerce / Boutique',
               notes: formData.notes,
-              totalAmount: cartState.totalAmount * 1.2, // TTC
+              totalAmount: cartState.totalAmount * 1.2,
               items: cartState.items.map(it => ({
                 name: it.product.name,
                 quantity: it.quantity,
@@ -187,7 +184,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               }))
             });
           } catch (err) {
-            console.error('Failed to save order in local B2B store:', err);
+            console.error('Failed to save order:', err);
           }
 
           // Clear cart in store AFTER PDF generation succeeds to prevent empty PDF issues

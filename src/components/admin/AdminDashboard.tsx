@@ -28,11 +28,14 @@ export default function AdminDashboard() {
 
   // Verify session on mount
   useEffect(() => {
-    const token = localStorage.getItem('nexiform_admin_token');
-    if (token === 'valid_token_2026') {
-      setIsAuthenticated(true);
-      refreshData();
-    }
+    const init = async () => {
+      const token = localStorage.getItem('nexiform_admin_token');
+      if (token === 'valid_token_2026') {
+        setIsAuthenticated(true);
+        await refreshData();
+      }
+    };
+    init();
   }, []);
 
   // Update stats whenever orders change
@@ -52,20 +55,19 @@ export default function AdminDashboard() {
     });
   }, [orders, isAuthenticated]);
 
-  const refreshData = () => {
-    const data = getOrders();
+  const refreshData = async () => {
+    const data = await getOrders();
     setOrders(data);
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (username === credentials.username && password === credentials.password) {
       localStorage.setItem('nexiform_admin_token', 'valid_token_2026');
       setIsAuthenticated(true);
       setLoginError('');
-      refreshData();
+      await refreshData();
       
-      // Dynamic entrance animation
       setTimeout(() => {
         gsap.fromTo('.admin-panel-animate', 
           { opacity: 0, y: 15 },
@@ -84,21 +86,16 @@ export default function AdminDashboard() {
     setPassword('');
   };
 
-  const handleStatusChange = (orderId: string, nextStatus: Order['status']) => {
-    const updated = updateOrderStatus(orderId, nextStatus);
-    setOrders(updated);
-    if (selectedOrder?.id === orderId) {
-      setSelectedOrder({ ...selectedOrder, status: nextStatus });
-    }
+  const handleStatusChange = async (orderId: string, nextStatus: Order['status']) => {
+    await updateOrderStatus(orderId, nextStatus);
+    await refreshData();
   };
 
-  const handleDelete = (orderId: string) => {
+  const handleDelete = async (orderId: string) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer définitivement ce projet de commande de l\'atelier ?')) {
-      const updated = deleteOrder(orderId);
-      setOrders(updated);
-      if (selectedOrder?.id === orderId) {
-        setSelectedOrder(null);
-      }
+      await deleteOrder(orderId);
+      await refreshData();
+      setSelectedOrder(null);
     }
   };
 

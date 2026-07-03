@@ -114,7 +114,7 @@ export default function ProductDetailPage({ slug }: ProductDetailPageProps) {
 
   const handleEnableCustom = () => {
     setIsCustomQty(true);
-    setQuantity(15); // Default start of custom volume
+    setQuantity(1);
   };
 
   return (
@@ -353,7 +353,7 @@ export default function ProductDetailPage({ slug }: ProductDetailPageProps) {
                     Quantités & Offres dégressives *
                   </span>
                   <span className="text-[#3B82F6] text-[10px] font-mono font-bold uppercase tracking-wider">
-                    MOQ: 10 pièces
+                    Min: 1 pièce
                   </span>
                 </div>
 
@@ -415,10 +415,10 @@ export default function ProductDetailPage({ slug }: ProductDetailPageProps) {
                       <span className="text-[10px] text-neutral-400 font-mono">Pièces :</span>
                       <input
                         type="number"
-                        min="10"
-                        step="5"
+                        min="1"
+                        step="1"
                         value={quantity}
-                        onChange={(e) => setQuantity(Math.max(10, parseInt(e.target.value) || 10))}
+                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                         className="w-20 h-9 px-2.5 rounded-xl border border-neutral-300 text-xs font-bold text-center focus:outline-none focus:border-[#3B82F6] bg-white text-black"
                       />
                     </div>

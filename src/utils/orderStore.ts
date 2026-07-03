@@ -22,170 +22,98 @@ export interface Order {
   notes?: string;
 }
 
-const DEFAULT_MOCK_ORDERS: Order[] = [
-  {
-    id: 'ord-101',
-    type: 'devis_boutique',
-    reference: 'DEVIS-2026-94821',
-    date: '2026-06-28',
-    clientName: 'Yassine Benjelloun',
-    companyName: 'Clinique Internationale d\'Anfa',
-    email: 'y.benjelloun@clinique-anfa.ma',
-    whatsapp: '+212 6 61 45 82 93',
-    industry: 'Médical / Santé',
-    items: [
-      {
-        name: 'Blouse Médicale Soft-Touch Pro',
-        quantity: 120,
-        options: 'Blanc Pur | Broderie Logo Coeur (+35 DH)',
-        price: 185,
-        totalPrice: 26400
-      },
-      {
-        name: 'Pantalon de Clinique Flex Comfort',
-        quantity: 120,
-        options: 'Bleu Marine | Aucun Marquage',
-        price: 140,
-        totalPrice: 16800
-      }
-    ],
-    totalAmount: 51840, // (26400+16800)*1.2 TTC
-    status: 'en_preparation',
-    notes: 'Livraison urgente demandée avant le 15 Juillet pour inauguration de l\'aile Est.'
-  },
-  {
-    id: 'ord-102',
-    type: 'bon_commande_autonome',
-    reference: 'BC-2026-3841',
-    date: '2026-06-29',
-    clientName: 'Ghita El Alami',
-    companyName: 'Royal Mansour Marrakech',
-    email: 'alami.g@royalmansour.ma',
-    whatsapp: '+212 6 62 88 11 44',
-    industry: 'Hôtellerie de Luxe',
-    items: [
-      {
-        name: 'Vestes de Réception Signature Or',
-        quantity: 45,
-        options: 'Broderie double fil or premium sur col'
-      },
-      {
-        name: 'Gilets de Service Haute Couture',
-        quantity: 60,
-        options: 'Sérigraphie logo discret'
-      }
-    ],
-    status: 'nouveau',
-    notes: 'Nous souhaitons recevoir des échantillons physiques des tissus avant validation définitive.'
-  },
-  {
-    id: 'ord-103',
-    type: 'devis_boutique',
-    reference: 'DEVIS-2026-47109',
-    date: '2026-06-30',
-    clientName: 'Karim Tazi',
-    companyName: 'Atlas Security Maroc',
-    email: 'k.tazi@atlas-security.com',
-    whatsapp: '+212 6 60 19 28 37',
-    industry: 'Sécurité',
-    items: [
-      {
-        name: 'Ensemble de Patrouille Tech-Comfort',
-        quantity: 80,
-        options: 'Noir Tactique | Sérigraphie Dos Réfléchissante (+32 DH)',
-        price: 245,
-        totalPrice: 22160
-      }
-    ],
-    totalAmount: 26592, // 22160 * 1.2
-    status: 'bat_envoye',
-    notes: 'Logo haute définition transmis par e-mail.'
-  },
-  {
-    id: 'ord-104',
-    type: 'bon_commande_autonome',
-    reference: 'BC-2026-7732',
-    date: '2026-07-01',
-    clientName: 'Amine Chraïbi',
-    companyName: 'Air Maroc Logistics',
-    email: 'a.chraibi@airmaroc-logistics.co.ma',
-    whatsapp: '+212 6 75 92 01 12',
-    industry: 'Logistique / Transport',
-    items: [
-      {
-        name: 'Combinaisons de Protection Renforcées',
-        quantity: 150,
-        options: 'Gris Industriel | Logo Sérigraphié Manche Droite'
-      }
-    ],
-    status: 'nouveau',
-    notes: 'Tissus anti-abrasion indispensables.'
-  }
-];
-
-export function getOrders(): Order[] {
-  if (typeof window === 'undefined') return DEFAULT_MOCK_ORDERS;
-  
+// localStorage cache: used as fallback when Google Sheets is unavailable
+function getLocalOrders(): Order[] {
   const stored = localStorage.getItem('nexiform_orders');
-  if (!stored) {
-    localStorage.setItem('nexiform_orders', JSON.stringify(DEFAULT_MOCK_ORDERS));
-    return DEFAULT_MOCK_ORDERS;
-  }
-  
+  if (!stored) return [];
   try {
     return JSON.parse(stored);
-  } catch (err) {
-    console.error('Error parsing orders from localStorage:', err);
-    return DEFAULT_MOCK_ORDERS;
+  } catch {
+    return [];
   }
 }
 
-export function saveOrder(orderData: Omit<Order, 'id' | 'date' | 'status'>): Order {
-  const orders = getOrders();
+function saveLocalOrders(orders: Order[]): void {
+  localStorage.setItem('nexiform_orders', JSON.stringify(orders));
+}
+
+export async function getOrders(): Promise<Order[]> {
+  try {
+    const sheetModule = await import('../lib/sheetStore');
+    const orders = await sheetModule.getOrders();
+
+    // Sync to localStorage cache so the app still works offline
+    saveLocalOrders(orders);
+
+    return orders;
+  } catch (err) {
+    console.warn('Google Sheets unavailable, using localStorage cache:', err);
+    return getLocalOrders();
+  }
+}
+
+export async function saveOrder(orderData: Omit<Order, 'id' | 'date' | 'status'>): Promise<Order> {
   const newOrder: Order = {
     ...orderData,
     id: `ord-${Math.floor(100000 + Math.random() * 900000)}`,
     date: new Date().toISOString().split('T')[0],
-    status: 'nouveau'
+    status: 'nouveau',
   };
-  
-  const updated = [newOrder, ...orders];
-  localStorage.setItem('nexiform_orders', JSON.stringify(updated));
-  
-  // Dispatch simple custom event to let other components know orders updated if they care
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('nexiform_orders_updated', { detail: updated }));
+
+  try {
+    const sheetModule = await import('../lib/sheetStore');
+    await sheetModule.saveOrder(newOrder);
+
+    // Update localStorage cache
+    const cached = getLocalOrders();
+    saveLocalOrders([newOrder, ...cached]);
+  } catch (err) {
+    console.warn('Google Sheets unavailable, saving to localStorage only:', err);
+    const cached = getLocalOrders();
+    saveLocalOrders([newOrder, ...cached]);
   }
-  
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('nexiform_orders_updated'));
+  }
+
   return newOrder;
 }
 
-export function updateOrderStatus(orderId: string, status: Order['status']): Order[] {
-  const orders = getOrders();
-  const updated = orders.map(ord => {
-    if (ord.id === orderId) {
-      return { ...ord, status };
-    }
-    return ord;
-  });
-  
-  localStorage.setItem('nexiform_orders', JSON.stringify(updated));
-  
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('nexiform_orders_updated', { detail: updated }));
+export async function updateOrderStatus(orderId: string, status: Order['status']): Promise<void> {
+  try {
+    const sheetModule = await import('../lib/sheetStore');
+    await sheetModule.updateOrderStatus(orderId, status);
+
+    // Update localStorage cache
+    const cached = getLocalOrders();
+    saveLocalOrders(cached.map(o => o.id === orderId ? { ...o, status } : o));
+  } catch (err) {
+    console.warn('Google Sheets unavailable, updating localStorage only:', err);
+    const cached = getLocalOrders();
+    saveLocalOrders(cached.map(o => o.id === orderId ? { ...o, status } : o));
   }
-  
-  return updated;
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('nexiform_orders_updated'));
+  }
 }
 
-export function deleteOrder(orderId: string): Order[] {
-  const orders = getOrders();
-  const updated = orders.filter(ord => ord.id !== orderId);
-  localStorage.setItem('nexiform_orders', JSON.stringify(updated));
-  
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('nexiform_orders_updated', { detail: updated }));
+export async function deleteOrder(orderId: string): Promise<void> {
+  try {
+    const sheetModule = await import('../lib/sheetStore');
+    await sheetModule.deleteOrder(orderId);
+
+    // Update localStorage cache
+    const cached = getLocalOrders();
+    saveLocalOrders(cached.filter(o => o.id !== orderId));
+  } catch (err) {
+    console.warn('Google Sheets unavailable, deleting from localStorage only:', err);
+    const cached = getLocalOrders();
+    saveLocalOrders(cached.filter(o => o.id !== orderId));
   }
-  
-  return updated;
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('nexiform_orders_updated'));
+  }
 }

@@ -149,20 +149,17 @@ export default function BonCommandeModal({ isOpen, onClose }: BonCommandeModalPr
     const intervals = [600, 1200, 1800, 2400, 3000];
     
     intervals.forEach((delay, idx) => {
-      setTimeout(() => {
+      setTimeout(async () => {
         setSubmitStep(idx + 1);
         
-        // At the final step, complete simulation and trigger automatic PDF download
         if (idx === intervals.length - 1) {
           setIsSubmitting(false);
           setIsSuccess(true);
           
-          // Generate and trigger auto-download of the PDF Devis document
           generatePDF();
 
-          // Save to B2B order store
           try {
-            saveOrder({
+            await saveOrder({
               type: 'bon_commande_autonome',
               reference: `BC-2026-${Math.floor(1000 + Math.random() * 9000)}`,
               clientName: fullName,
