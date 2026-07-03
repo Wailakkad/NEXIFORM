@@ -1,6 +1,6 @@
 import { Order } from '../utils/orderStore';
 
-// Uses Vite proxy to avoid CORS issues
+// Uses Vite proxy (dev) or Vercel rewrites (prod) to avoid CORS issues
 const WEB_APP_URL = '/api/exec';
 
 async function fetchApi(action: string, params?: Record<string, string>): Promise<any> {
