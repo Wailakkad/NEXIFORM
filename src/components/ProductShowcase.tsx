@@ -127,7 +127,7 @@ export default function ProductShowcase() {
         {/* Product Grid — Two Columns */}
         <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-16 mt-16 md:mt-24">
           
-          {/* Product 1: Polo corporate Atlas */}
+          {/* Product 1: Medical product */}
           <div className="product-card flex flex-col">
             <div className="relative aspect-[4/3] w-full rounded-sm bg-[radial-gradient(circle_at_center,_#F5F5F5_0%,_#FAFAFA_100%)] flex items-center justify-center overflow-hidden p-8 border border-neutral-100">
               {/* Four corner-bracket decorations */}
@@ -141,8 +141,8 @@ export default function ProductShowcase() {
               
               {/* Product Image */}
               <img
-                src="/src/assets/images/polo_atlas_1782819847872.jpg"
-                alt="Polo corporate Atlas NEXIFORM, secteurs hôtellerie et sécurité"
+                src="https://res.cloudinary.com/dhkyla1rv/image/upload/v1782858217/Ensemble_M%C3%A9dical_Professionnel_Bleu_Ciel.jpg"
+                alt="Ensemble Médical Professionnel Bleu Ciel NEXIFORM, secteur médical"
                 className="relative z-10 w-[60%] md:w-[55%] h-auto object-contain transition-transform duration-500 hover:scale-105"
                 referrerPolicy="no-referrer"
               />
@@ -151,15 +151,15 @@ export default function ProductShowcase() {
             {/* Product Label Block */}
             <div className="mt-5 flex flex-col items-start">
               <h3 className="text-[#0A0A0A] font-semibold text-[15px] font-sans">
-                Polo corporate Atlas
+                Ensemble Médical Professionnel Bleu Ciel
               </h3>
               <span className="text-[#888888] text-[12px] uppercase tracking-[0.06em] font-sans mt-1">
-                Hôtellerie · Corporate · Sécurité
+                Médical · Clinique · Hôpital
               </span>
             </div>
           </div>
 
-          {/* Product 2: Veste de chef Prestige */}
+          {/* Product 2: EPI product */}
           <div className="product-card flex flex-col">
             <div className="relative aspect-[4/3] w-full rounded-sm bg-[radial-gradient(circle_at_center,_#F5F5F5_0%,_#FAFAFA_100%)] flex items-center justify-center overflow-hidden p-8 border border-neutral-100">
               {/* Four corner-bracket decorations */}
@@ -173,8 +173,8 @@ export default function ProductShowcase() {
               
               {/* Product Image */}
               <img
-                src="/src/assets/images/chef_prestige_1782819861496.jpg"
-                alt="Veste de chef Prestige NEXIFORM, secteur restauration"
+                src="https://res.cloudinary.com/fnxxj10k/image/upload/v1782911783/WhatsApp_Image_2026-07-01_at_11.56.00_xyokqk.jpg"
+                alt="Strike Pro Industrial Set NEXIFORM, secteur EPI"
                 className="relative z-10 w-[60%] md:w-[55%] h-auto object-contain transition-transform duration-500 hover:scale-105"
                 referrerPolicy="no-referrer"
               />
@@ -183,10 +183,10 @@ export default function ProductShowcase() {
             {/* Product Label Block */}
             <div className="mt-5 flex flex-col items-start">
               <h3 className="text-[#0A0A0A] font-semibold text-[15px] font-sans">
-                Veste de chef Prestige
+                Strike Pro™ Industrial Set
               </h3>
               <span className="text-[#888888] text-[12px] uppercase tracking-[0.06em] font-sans mt-1">
-                Restauration · Hôtellerie
+                EPI · Industrie · Chantier
               </span>
             </div>
           </div>
