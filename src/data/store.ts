@@ -21,7 +21,7 @@ export interface Product {
   image: string;
   description: string;
   features: string[];
-  gender?: 'femme' | 'homme';
+  gender?: 'femme' | 'homme' | 'mixte';
 }
 
 export interface StoreData {
@@ -37,7 +37,8 @@ export const storeData: StoreData = {
   industries: [
     { id: "medical", name: "Médical", slug: "medical" },
     { id: "restauration", name: "Restauration", slug: "restauration" },
-    { id: "epi", name: "EPI", slug: "epi" }
+    { id: "epi", name: "EPI", slug: "epi" },
+    { id: "nettoyage", name: "Nettoyage", slug: "nettoyage" }
   ],
 
   wear_categories: [
@@ -48,7 +49,8 @@ export const storeData: StoreData = {
     { id: "combinaison", name: "Combinaison (EPI)" },
     { id: "gilet", name: "Gilet Technique (EPI)" },
     { id: "tablier", name: "Tablier Professionnel" },
-    { id: "gilet-cafe", name: "Gilet Café" }
+    { id: "gilet-cafe", name: "Gilet Café" },
+    { id: "uniforme", name: "Uniforme Nettoyage" }
   ],
 
   products: [
@@ -269,8 +271,7 @@ export const storeData: StoreData = {
       wear_category: "jacket-pantalon",
       slug: "epi-strike-001",
       name: "Strike Pro™ Industrial Set 001",
-      price: 499,
-      color: "Bleu Marine / Rouge",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911783/WhatsApp_Image_2026-07-01_at_11.56.00_xyokqk.jpg",
       description: "Ensemble industriel haute performance conçu pour chantiers exigeants et environnements techniques.",
       features: ["Bandes réfléchissantes", "Tissu renforcé", "Multiples poches", "Usage intensif"]
@@ -279,11 +280,10 @@ export const storeData: StoreData = {
       id: "EPI-002",
       sku: "NX-EPI-002",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "salopit",
       slug: "epi-strike-002",
       name: "Strike Pro™ Industrial Set 002",
-      price: 519,
-      color: "Gris / Noir",
+      price: 229,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911783/Using_the_input_image_strictly_202607011358_he6rsu.jpg",
       description: "Version premium pour équipes techniques recherchant robustesse et confort.",
       features: ["Renforts genoux", "Coupe ergonomique", "Haute résistance"]
@@ -292,11 +292,10 @@ export const storeData: StoreData = {
       id: "EPI-003",
       sku: "NX-EPI-003",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "Gilet",
       slug: "epi-strike-003",
       name: "Strike Pro™ Industrial Set 003",
-      price: 529,
-      color: "Technique",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911783/Using_the_input_image_strictly_202607011404_mcrlpp.jpg",
       description: "Solution complète pour performance terrain et protection avancée.",
       features: ["Structure renforcée", "Haute visibilité", "Durabilité maximale"]
@@ -305,11 +304,10 @@ export const storeData: StoreData = {
       id: "EPI-004",
       sku: "NX-EPI-004",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "Gilet 3M",
       slug: "epi-strike-004",
       name: "Strike Pro™ Industrial Set 004",
-      price: 489,
-      color: "Bleu Technique",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911782/Using_the_input_image_strictly_202607011356_zflnmm.jpg",
       description: "Ensemble robuste optimisé pour maintenance lourde.",
       features: ["Tissu industriel", "Coutures renforcées", "Confort longue durée"]
@@ -321,8 +319,7 @@ export const storeData: StoreData = {
       wear_category: "jacket-pantalon",
       slug: "epi-strike-005",
       name: "Strike Pro™ Industrial Set 005",
-      price: 499,
-      color: "Industriel",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911782/Using_the_input_image_strictly_202607011357_fqukpz.jpg",
       description: "Performance maximale pour usage professionnel intensif.",
       features: ["Protection renforcée", "Structure technique", "Haute résistance"]
@@ -334,8 +331,7 @@ export const storeData: StoreData = {
       wear_category: "jacket-pantalon",
       slug: "epi-strike-006",
       name: "Strike Pro™ Industrial Set 006",
-      price: 519,
-      color: "Pro Series",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911783/WhatsApp_Image_2026-07-01_at_11.56.00.jpeg_202607011411_puj48b.jpg",
       description: "Conçu pour équipes professionnelles exigeantes.",
       features: ["Haute durabilité", "Coupe ergonomique", "Multiples poches"]
@@ -344,11 +340,10 @@ export const storeData: StoreData = {
       id: "EPI-007",
       sku: "NX-EPI-007",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "gilet",
       slug: "epi-force-007",
       name: "Force One™ Combinaison 007",
-      price: 469,
-      color: "Gris",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911782/Using_the_input_image_strictly_202607011356_2_sbdo22.jpg",
       description: "Combinaison intégrale pour protection industrielle avancée.",
       features: ["Protection intégrale", "Fermeture sécurisée", "Usage intensif"]
@@ -357,11 +352,10 @@ export const storeData: StoreData = {
       id: "EPI-008",
       sku: "NX-EPI-008",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "gilet",
       slug: "epi-force-008",
       name: "Force One™ Combinaison 008",
-      price: 489,
-      color: "Gris Foncé",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911782/Using_the_input_image_strictly_202607011355_rqs1ln.jpg",
       description: "Protection renforcée pour maintenance lourde.",
       features: ["Renfort genoux", "Tissu épais", "Durabilité maximale"]
@@ -370,11 +364,10 @@ export const storeData: StoreData = {
       id: "EPI-009",
       sku: "NX-EPI-009",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "gilet",
       slug: "epi-force-009",
       name: "Force One™ Combinaison 009",
-      price: 499,
-      color: "Bleu Marine",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911782/Using_the_input_image_strictly_202607011356_1_rswmca.jpg",
       description: "Version premium pour performance terrain.",
       features: ["Coupe ergonomique", "Protection renforcée"]
@@ -383,11 +376,10 @@ export const storeData: StoreData = {
       id: "EPI-010",
       sku: "NX-EPI-010",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "jacket-pantalon",
       slug: "epi-force-010",
       name: "Force One™ Combinaison 010",
-      price: 479,
-      color: "Technique",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911781/t%C3%A9l%C3%A9chargement.webp_2K_202607011411_d4mm0v.jpg",
       description: "Protection complète et confort optimisé.",
       features: ["Haute résistance", "Structure robuste"]
@@ -396,11 +388,10 @@ export const storeData: StoreData = {
       id: "EPI-011",
       sku: "NX-EPI-011",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "gilet-pantalon",
       slug: "epi-strike-011",
       name: "Strike Pro™ Industrial Set 011",
-      price: 499,
-      color: "Industriel",
+      price: 239,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911781/Using_the_input_image_as_202607011409_j0qkxg.jpg",
       description: "Ensemble professionnel haute durabilité.",
       features: ["Renforts stratégiques", "Multiples poches"]
@@ -412,8 +403,7 @@ export const storeData: StoreData = {
       wear_category: "jacket-pantalon",
       slug: "epi-strike-012",
       name: "Strike Pro™ Industrial Set 012",
-      price: 519,
-      color: "Technique",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911782/Using_the_input_image_as_202607011411_qwx4fs.jpg",
       description: "Performance industrielle premium.",
       features: ["Tissu renforcé", "Haute visibilité"]
@@ -422,11 +412,10 @@ export const storeData: StoreData = {
       id: "EPI-013",
       sku: "NX-EPI-013",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "combinaison",
       slug: "epi-strike-013",
       name: "Strike Pro™ Industrial Set 013",
-      price: 509,
-      color: "Pro",
+      price: 199,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911780/Model_wearing_workwear_garment_2K_202607011358_eoxiwz.jpg",
       description: "Protection avancée pour terrain exigeant.",
       features: ["Durabilité maximale", "Structure technique"]
@@ -435,11 +424,10 @@ export const storeData: StoreData = {
       id: "EPI-014",
       sku: "NX-EPI-014",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "salopit",
       slug: "epi-strike-014",
       name: "Strike Pro™ Industrial Set 014",
-      price: 509,
-      color: "Industriel",
+      price: 229,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911780/Model_wearing_workwear_garment_2K_202607011358_2_ec96nz.jpg",
       description: "Optimisé pour chantiers et maintenance.",
       features: ["Haute résistance", "Confort longue durée"]
@@ -448,11 +436,10 @@ export const storeData: StoreData = {
       id: "EPI-015",
       sku: "NX-EPI-015",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "salopit",
       slug: "epi-strike-015",
       name: "Strike Pro™ Industrial Set 015",
-      price: 509,
-      color: "Technique",
+      price: 229,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911781/Model_wearing_workwear_garment_2K_202607011406_t7owzj.jpg",
       description: "Protection maximale pour environnement technique.",
       features: ["Coutures renforcées", "Bandes réfléchissantes"]
@@ -461,11 +448,10 @@ export const storeData: StoreData = {
       id: "EPI-016",
       sku: "NX-EPI-016",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "gilet-pantalon",
       slug: "epi-strike-016",
       name: "Strike Pro™ Industrial Set 016",
-      price: 509,
-      color: "Pro",
+      price: 239,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911780/Model_wearing_workwear_garment_2K_202607011357_2_xybmsr.jpg",
       description: "Solution complète pour performance terrain.",
       features: ["Renforts techniques", "Durabilité accrue"]
@@ -474,11 +460,10 @@ export const storeData: StoreData = {
       id: "EPI-017",
       sku: "NX-EPI-017",
       industry: "epi",
-      wear_category: "jacket-pantalon",
+      wear_category: "combinaison",
       slug: "epi-strike-017",
       name: "Strike Pro™ Industrial Set 017",
-      price: 509,
-      color: "Industriel",
+      price: 199,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911780/Model_wearing_workwear_garment_2K_202607011358_1_tx6xw6.jpg",
       description: "Conçu pour usage professionnel intensif.",
       features: ["Structure robuste", "Haute résistance"]
@@ -490,8 +475,7 @@ export const storeData: StoreData = {
       wear_category: "jacket-pantalon",
       slug: "epi-strike-018",
       name: "Strike Pro™ Industrial Set 018",
-      price: 509,
-      color: "Technique",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911780/Model_wearing_workwear_garment_2K_202607011357_ibpdqp.jpg",
       description: "Protection avancée pour équipes terrain.",
       features: ["Haute visibilité", "Tissu renforcé"]
@@ -500,11 +484,10 @@ export const storeData: StoreData = {
       id: "EPI-019",
       sku: "NX-EPI-019",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "jacket-pantalon",
       slug: "epi-force-019",
       name: "Force One™ Combinaison 019",
-      price: 489,
-      color: "Industriel",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911779/Model_wearing_workwear_catalog_2K_202607011410_2_zazmrk.jpg",
       description: "Combinaison professionnelle haute protection.",
       features: ["Protection intégrale", "Usage intensif"]
@@ -513,11 +496,10 @@ export const storeData: StoreData = {
       id: "EPI-020",
       sku: "NX-EPI-020",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "gilet-pantalon",
       slug: "epi-force-020",
       name: "Force One™ Combinaison 020",
-      price: 489,
-      color: "Technique",
+      price: 239,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911779/Model_wearing_workwear_garment_2K_202607011357_1_xvebw7.jpg",
       description: "Conçue pour maintenance industrielle.",
       features: ["Durabilité maximale", "Renforts techniques"]
@@ -526,11 +508,10 @@ export const storeData: StoreData = {
       id: "EPI-021",
       sku: "NX-EPI-021",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "jacket-pantalon",
       slug: "epi-force-021",
       name: "Force One™ Combinaison 021",
-      price: 489,
-      color: "Pro",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911779/Model_wearing_workwear_catalog_2K_202607011410_1_rxpjp4.jpg",
       description: "Protection renforcée usage professionnel.",
       features: ["Structure technique", "Haute résistance"]
@@ -539,11 +520,10 @@ export const storeData: StoreData = {
       id: "EPI-022",
       sku: "NX-EPI-022",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "jacket-pantalon",
       slug: "epi-force-022",
       name: "Force One™ Combinaison 022",
-      price: 489,
-      color: "Gris",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911778/Model_wearing_workwear_catalog_2K_202607011359_lbpldb.jpg",
       description: "Solution intégrale pour environnement exigeant.",
       features: ["Protection intégrale", "Tissu épais"]
@@ -555,8 +535,7 @@ export const storeData: StoreData = {
       wear_category: "combinaison",
       slug: "epi-force-023",
       name: "Force One™ Combinaison 023",
-      price: 489,
-      color: "Bleu",
+      price: 199,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911778/Model_wearing_workwear_catalog_2K_202607011407_dxnf9i.jpg",
       description: "Combinaison premium haute performance.",
       features: ["Haute visibilité", "Structure renforcée"]
@@ -568,8 +547,7 @@ export const storeData: StoreData = {
       wear_category: "combinaison",
       slug: "epi-force-024",
       name: "Force One™ Combinaison 024",
-      price: 489,
-      color: "Technique",
+      price: 199,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911778/Model_wearing_workwear_catalog_2K_202607011408_npowvj.jpg",
       description: "Conçue pour équipes industrielles spécialisées.",
       features: ["Renforts genoux", "Tissu durable"]
@@ -578,11 +556,10 @@ export const storeData: StoreData = {
       id: "EPI-025",
       sku: "NX-EPI-025",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "gilet-pantalon",
       slug: "epi-force-025",
       name: "Force One™ Combinaison 025",
-      price: 489,
-      color: "Pro",
+      price: 239,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911777/Model_wearing_workwear_catalog_2K_202607011358_1_ynzwxb.jpg",
       description: "Protection totale pour usage intensif.",
       features: ["Durabilité maximale", "Protection avancée"]
@@ -594,8 +571,7 @@ export const storeData: StoreData = {
       wear_category: "combinaison",
       slug: "epi-force-026",
       name: "Force One™ Combinaison 026",
-      price: 489,
-      color: "Technique",
+      price: 199,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911777/Model_wearing_workwear_catalog_2K_202607011358_2_tnt91m.jpg",
       description: "Solution complète pour terrain exigeant.",
       features: ["Structure renforcée", "Tissu haute densité"]
@@ -604,11 +580,10 @@ export const storeData: StoreData = {
       id: "EPI-027",
       sku: "NX-EPI-027",
       industry: "epi",
-      wear_category: "combinaison",
+      wear_category: "gilet-pantalon",
       slug: "epi-force-027",
       name: "Force One™ Combinaison 027",
-      price: 489,
-      color: "Industriel",
+      price: 239,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911778/Model_wearing_workwear_catalog_2K_202607011358_q22hg6.jpg",
       description: "Protection maximale et confort optimisé.",
       features: ["Haute résistance", "Renforts techniques"]
@@ -620,8 +595,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-028",
       name: "Core Pro™ Gilet 028",
-      price: 269,
-      color: "Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911776/Model_wearing_vest_on_white_202607011357_4_jsoho1.jpg",
       description: "Gilet professionnel haute visibilité.",
       features: ["Multiples poches", "Structure légère"]
@@ -630,11 +604,10 @@ export const storeData: StoreData = {
       id: "EPI-029",
       sku: "NX-EPI-029",
       industry: "epi",
-      wear_category: "gilet",
+      wear_category: "jacket-pantalon",
       slug: "epi-core-029",
       name: "Core Pro™ Gilet 029",
-      price: 269,
-      color: "Bleu",
+      price: 249,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911777/Model_wearing_workwear_2K_202607011358_k85wqt.jpg",
       description: "Conçu pour mobilité et efficacité terrain.",
       features: ["Design ergonomique", "Résistance accrue"]
@@ -646,8 +619,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-030",
       name: "Core Pro™ Gilet 030",
-      price: 269,
-      color: "Industriel",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911777/Model_wearing_vest_on_white_202607011357_vati7f.jpg",
       description: "Optimisé pour techniciens professionnels.",
       features: ["Multiples compartiments", "Structure robuste"]
@@ -659,8 +631,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-031",
       name: "Core Pro™ Gilet 031",
-      price: 269,
-      color: "Pro",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911775/Model_wearing_vest_on_white_202607011356_wnhvus.jpg",
       description: "Performance et organisation maximale.",
       features: ["Haute visibilité", "Durabilité accrue"]
@@ -669,11 +640,10 @@ export const storeData: StoreData = {
       id: "EPI-032",
       sku: "NX-EPI-032",
       industry: "epi",
-      wear_category: "gilet",
+      wear_category: "salopit",
       slug: "epi-core-032",
       name: "Core Pro™ Gilet 032",
-      price: 279,
-      color: "Noir",
+      price: 229,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911776/Model_wearing_black_product_2K_202607011358_ktodhx.jpg",
       description: "Gilet technique noir haute performance.",
       features: ["Poches renforcées", "Structure technique"]
@@ -685,8 +655,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-033",
       name: "Core Pro™ Gilet 033",
-      price: 269,
-      color: "Industriel",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911776/Model_wearing_vest_on_white_202607011357_1_uapxvz.jpg",
       description: "Solution légère et robuste.",
       features: ["Multiples poches", "Haute résistance"]
@@ -698,8 +667,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-034",
       name: "Core Pro™ Gilet 034",
-      price: 269,
-      color: "Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911775/Male_model_wearing_vest_2K_202607011356_3_ock7qt.jpg",
       description: "Gilet haute visibilité terrain.",
       features: ["Structure légère", "Usage intensif"]
@@ -711,8 +679,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-035",
       name: "Core Pro™ Gilet 035",
-      price: 269,
-      color: "Technique",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911774/Male_model_wearing_vest_2K_202607011404_uf6rdr.jpg",
       description: "Gilet robuste et ergonomique.",
       features: ["Multiples compartiments", "Durabilité accrue"]
@@ -724,8 +691,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-036",
       name: "Core Pro™ Gilet 036",
-      price: 269,
-      color: "Pro",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911775/Model_wearing_vest_on_white_202607011357_3_u2onj3.jpg",
       description: "Conçu pour techniciens spécialisés.",
       features: ["Haute visibilité", "Structure technique"]
@@ -737,8 +703,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-037",
       name: "Core Pro™ Gilet 037",
-      price: 269,
-      color: "Industriel",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911774/Model_wearing_vest_on_white_202607011357_2_t9eoph.jpg",
       description: "Organisation optimale pour terrain.",
       features: ["Multiples poches", "Usage intensif"]
@@ -750,8 +715,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-038",
       name: "Core Pro™ Gilet 038",
-      price: 269,
-      color: "Technique",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911774/Male_model_wearing_vest_2K_202607011355_k9qaez.jpg",
       description: "Gilet professionnel haute performance.",
       features: ["Structure robuste", "Durabilité maximale"]
@@ -763,8 +727,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-039",
       name: "Core Pro™ Gilet 039",
-      price: 269,
-      color: "Industriel",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911774/Male_model_wearing_vest_2K_202607011356_1_tdihnx.jpg",
       description: "Optimisé pour usage terrain intensif.",
       features: ["Multiples compartiments", "Renforts techniques"]
@@ -776,8 +739,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "epi-core-040",
       name: "Core Pro™ Gilet 040",
-      price: 269,
-      color: "Pro",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782911774/Male_model_wearing_vest_2K_202607011356_2_qul5li.jpg",
       description: "Solution polyvalente pour professionnels exigeants.",
       features: ["Haute résistance", "Design ergonomique"]
@@ -789,8 +751,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-bleu-orange-2",
       name: "Gilet Serge – Bleu / Orange II",
-      price: 279,
-      color: "Bleu / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914254/GILET_SERGE_B.O_2_rvjpnl.jpg",
       description: "Gilet de travail technique Serge haute résistance bicolore.",
       features: ["Finition Serge Premium", "Double coloris haute visibilité", "Multiples poches fonctionnelles"]
@@ -802,8 +763,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-bleu-ciel-orange",
       name: "Gilet Serge – Bleu Ciel / Orange",
-      price: 279,
-      color: "Bleu Ciel / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914255/GILET_SERG_BLEU_SIEL._ORANGE_hovpqe.jpg",
       description: "Gilet technique bicolore avec bandes rétro-réfléchissantes.",
       features: ["Tissu ultra-respirant", "Bandes rétro-réfléchissantes", "Col en V"]
@@ -815,8 +775,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-bleu-orange-3",
       name: "Gilet Serge – Bleu / Orange III",
-      price: 279,
-      color: "Bleu / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914255/GILET_SERGE_B.O_3_ncgwwd.jpg",
       description: "Gilet de protection ergonomique avec structure de poche renforcée.",
       features: ["Poches à soufflet", "Structure ergonomique", "Fermeture zippée"]
@@ -828,8 +787,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-simple-noir",
       name: "Gilet Simple – Noir",
-      price: 249,
-      color: "Noir",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914252/GILET_SIMPLE_NOIRE_kxviel.jpg",
       description: "Gilet de travail classique noir, léger et très fonctionnel.",
       features: ["Léger et robuste", "Ajustement confortable", "Porte-badge intégré"]
@@ -841,8 +799,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-noir-orange",
       name: "Gilet Serge – Noir / Orange",
-      price: 279,
-      color: "Noir / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914253/GILET_SERGE_N.O_vx1ns0.jpg",
       description: "Gilet de sécurité bicolore noir et orange avec bandes réfléchissantes.",
       features: ["Bandes réfléchissantes normées", "Tissu serge haut de gamme", "Résistant à l'usure"]
@@ -854,8 +811,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-noir-orange-2",
       name: "Gilet Serge – Noir / Orange II",
-      price: 279,
-      color: "Noir / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914253/GILET_SERGE_N.O_2_dhdbh7.jpg",
       description: "Version II de notre célèbre gilet bicolore noir et orange, optimisé pour les chantiers.",
       features: ["Multi-poches zippées", "Bandes rétro-réfléchissantes de sécurité", "Coupe cintrée"]
@@ -867,8 +823,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-simple-blanc",
       name: "Gilet Simple – Blanc",
-      price: 249,
-      color: "Blanc",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914250/GILET_SIMPLE_BLANCH_dvit2s.jpg",
       description: "Gilet utilitaire blanc épuré, adapté aux laboratoires et milieux contrôlés.",
       features: ["Facile d'entretien", "Textile respirant", "Grande liberté de mouvement"]
@@ -880,8 +835,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-gris-orange",
       name: "Gilet Serge – Gris / Orange",
-      price: 279,
-      color: "Gris / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914251/GILET_SERGE_G.O_rn5emf.jpg",
       description: "Gilet de chantier Gris et Orange de qualité supérieure.",
       features: ["Fermeture zippée robuste", "Emplacements outils dédiés", "Bandes rétro-réfléchissantes"]
@@ -893,8 +847,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-simple-jaune",
       name: "Gilet Simple – Jaune",
-      price: 249,
-      color: "Jaune",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914251/GILET_SIMPLE_JAUNE_crwumu.jpg",
       description: "Gilet classique jaune haute visibilité, idéal pour la sécurité sur voirie.",
       features: ["Haute visibilité de classe 2", "Finition soignée", "Matériaux ultra-légers"]
@@ -906,8 +859,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-bleu-rouge",
       name: "Gilet Serge – Bleu / Rouge",
-      price: 279,
-      color: "Bleu / Rouge",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914248/GILET_SERGE_B.R_eyuvpu.jpg",
       description: "Gilet bicolore Bleu Marine et Rouge en sergé de coton.",
       features: ["Structure serge de coton résistante", "Design dynamique bicolore", "Poches latérales spacieuses"]
@@ -919,8 +871,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-vert-orange",
       name: "Gilet Serge – Vert / Orange",
-      price: 279,
-      color: "Vert / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914249/GILET_SERGE_V.O_k3o821.jpg",
       description: "Gilet bicolore Vert et Orange pour espaces verts et voiries.",
       features: ["Parfait pour travaux extérieurs", "Multi-poches fonctionnelles", "Tissu épais de qualité"]
@@ -932,8 +883,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-bleu-orange",
       name: "Gilet Serge – Bleu / Orange",
-      price: 279,
-      color: "Bleu / Orange",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914249/GILET_SERGE_B.O_lfdlsa.jpg",
       description: "Gilet classique bicolore bleu et orange, le standard des électriciens et techniciens.",
       features: ["Fermeture zippée centrale", "Structure respirante", "Passants pour talkie-walkie"]
@@ -945,8 +895,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-noir-jaune",
       name: "Gilet Serge – Noir / Jaune",
-      price: 279,
-      color: "Noir / Jaune",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914246/GILET_SERGE_N.J_lfldgd.jpg",
       description: "Design audacieux Noir et Jaune avec de multiples compartiments de rangement.",
       features: ["Poches sécurisées", "Haute respirabilité", "Design bicolore moderne"]
@@ -958,8 +907,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-simple-rouge",
       name: "Gilet Simple – Rouge",
-      price: 249,
-      color: "Rouge",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914247/GILET_SIMPLE_ROUGE_ljkd7g.jpg",
       description: "Gilet de sécurité rouge uni, adapté pour le personnel de secours et de sécurité.",
       features: ["Grande liberté de mouvement", "Couleur vive d'alerte", "Rangement stylo et badge"]
@@ -971,8 +919,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-simple-bleu",
       name: "Gilet Simple – Bleu",
-      price: 249,
-      color: "Bleu",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914247/GILET_SIMPLE_BLEU_zkk071.jpg",
       description: "Gilet polyvalent bleu marine de conception simplifiée pour techniciens.",
       features: ["Séchage rapide", "Tissu résistant", "Porte-clés intégré"]
@@ -984,8 +931,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-simple-orange",
       name: "Gilet Simple – Orange",
-      price: 249,
-      color: "Orange",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914244/GILET_SIMPLE_ORANGE_lixwnq.jpg",
       description: "Gilet de signalisation orange haute visibilité léger et résistant.",
       features: ["Matériaux respirants", "Bandes réfléchissantes horizontales", "Facile à enfiler"]
@@ -997,8 +943,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-simple-vert",
       name: "Gilet Simple – Vert",
-      price: 249,
-      color: "Vert",
+      price: 139,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914245/GILET_SIMPLE_VERT_evpv6j.jpg",
       description: "Gilet léger vert pour le personnel d'accueil et d'entretien extérieur.",
       features: ["Ultra léger", "Facilement lavable", "Emplacements de marquage"]
@@ -1010,8 +955,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-bleu",
       name: "Gilet Serge – Bleu Marine",
-      price: 279,
-      color: "Bleu",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914245/GILET_SERGE_BLEU_bdhsjm.jpg",
       description: "Gilet serge uni bleu marine haute qualité pour professionnels.",
       features: ["Finitions soignées", "Grandes poches à rabat", "Tissu double épaisseur"]
@@ -1023,8 +967,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-gris-orange-2",
       name: "Gilet Serge – Gris / Orange II",
-      price: 279,
-      color: "Gris / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914216/GILET_SERGE_G.O_2_wcs0cv.jpg",
       description: "Seconde édition de notre gilet Gris / Orange professionnel à poches multiples.",
       features: ["Structure technique renforcée", "Bandes horizontales et verticales", "Boucle porte-badge"]
@@ -1036,8 +979,7 @@ export const storeData: StoreData = {
       wear_category: "gilet",
       slug: "gilet-serge-noir-orange-3",
       name: "Gilet Serge – Noir / Orange III",
-      price: 279,
-      color: "Noir / Orange",
+      price: 149,
       image: "https://res.cloudinary.com/fnxxj10k/image/upload/v1782914216/GILET_SERGE_N.O_3_p34qji.jpg",
       description: "Gilet sergé haut de gamme Noir / Orange édition spéciale sécurité chantier.",
       features: ["Bandes réfléchissantes haute densité", "Double couture renforcée", "Ergonomie de pointe"]
@@ -1469,6 +1411,86 @@ export const storeData: StoreData = {
         "Tissu résistant aux usages intensifs",
         "Image élégante & professionnelle"
       ]
+    },
+    {
+      "id": "NET-001",
+      "sku": "NX-NET-TBL-BL",
+      "industry": "nettoyage",
+      "wear_category": "tablier",
+      "slug": "tablier-nettoyage-bleu",
+      "name": "Tablier Professionnel Nettoyage – Bleu",
+      "color": "Gris",
+      "price": 149,
+      "image": "https://res.cloudinary.com/fnxxj10k/image/upload/v1782927884/tablier_de_neto_wjx5sa.jpg",
+      "description": "Tablier robuste et pratique pour les agents de nettoyage. Résistant aux produits chimiques et aux taches, il assure une protection optimale tout au long de la journée.",
+      "features": [
+        "Résistant aux produits chimiques",
+        "Tissu imperméable",
+        "Poches fonctionnelles",
+        "Résistant aux taches",
+        "Personnalisation logo disponible"
+      ],
+      "gender": "mixte"
+    },
+    {
+      "id": "NET-002",
+      "sku": "NX-NET-TBL-VT",
+      "industry": "nettoyage",
+      "wear_category": "tablier",
+      "slug": "tablier-nettoyage-vert",
+      "name": "Tablier Professionnel Nettoyage – Vert",
+      "color": "Rose ",
+      "price": 149,
+      "image": "https://res.cloudinary.com/fnxxj10k/image/upload/v1782927893/tablier_de_neto_2_hwcfvt.jpg",
+      "description": "Tablier de nettoyage en coloris vert, idéal pour identifier rapidement vos équipes sur le terrain. Conçu pour une utilisation intensive en milieu professionnel.",
+      "features": [
+        "Tissu résistant haute durabilité",
+        "Imperméable aux éclaboussures",
+        "Coupe ajustable",
+        "Lavable en machine",
+        "Personnalisation logo disponible"
+      ],
+      "gender": "mixte"
+    },
+    {
+      "id": "NET-003",
+      "sku": "NX-NET-UNI-4P",
+      "industry": "nettoyage",
+      "wear_category": "uniforme",
+      "slug": "uniforme-nettoyage-4-poches",
+      "name": "Uniforme Nettoyage 4 Poches – Professionnel",
+      "color": "Gris",
+      "price": 199,
+      "image": "https://res.cloudinary.com/fnxxj10k/image/upload/v1782927939/uniforme_de_neto_4P_wsahrp.jpg",
+      "description": "Uniforme complet 4 poches pour agents de nettoyage. Alliant praticité et image professionnelle, il est conçu pour les interventions en entreprise, hôtellerie et espaces publics.",
+      "features": [
+        "4 poches fonctionnelles",
+        "Tissu respirant anti-transpiration",
+        "Résistant aux lavages fréquents",
+        "Coupe ergonomique unisexe",
+        "Personnalisation logo disponible"
+      ],
+      "gender": "mixte"
+    },
+    {
+      "id": "NET-004",
+      "sku": "NX-NET-TBL-GR",
+      "industry": "nettoyage",
+      "wear_category": "tablier",
+      "slug": "tablier-nettoyage-gris",
+      "name": "Tablier Professionnel Nettoyage – Gris",
+      "color": "Rose ",
+      "price": 149,
+      "image": "https://res.cloudinary.com/fnxxj10k/image/upload/v1782927871/tablier_de_neto_3_ssuwuv.jpg",
+      "description": "Tablier gris élégant et discret, parfait pour les prestataires de nettoyage intervenant dans des environnements haut de gamme comme les hôtels, bureaux et cliniques.",
+      "features": [
+        "Coloris neutre et professionnel",
+        "Tissu solide anti-déchirure",
+        "Résistant aux produits détergents",
+        "Fermeture ajustable dans le dos",
+        "Personnalisation logo disponible"
+      ],
+      "gender": "mixte"
     }
   ]
 };

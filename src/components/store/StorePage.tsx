@@ -280,7 +280,7 @@ export default function StorePage() {
       </div>
 
       {/* Interactive Immersive Category Banner styled with premium theme */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 mt-8">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 mt-8 hidden md:block">
         <div className={`relative w-full aspect-[21/9] md:aspect-[3/1] rounded-3xl overflow-hidden bg-gradient-to-r ${bannerContent.gradient} p-8 md:p-12 flex flex-col justify-between group shadow-sm border border-neutral-100`}>
           
           {/* Subtle soft fabric wave vector simulation overlay */}
@@ -526,7 +526,7 @@ export default function StorePage() {
           <div className="lg:col-span-3 flex flex-col justify-start">
             <div className="space-y-6 sticky top-28">
               {/* Card 1: Signature */}
-              <div className="bg-neutral-50 border border-neutral-100 rounded-3xl p-8 flex flex-col justify-between h-[360px]">
+              <div className="bg-neutral-50 border border-neutral-100 rounded-3xl md:p-8 p-5 flex flex-col justify-between md:h-[360px] h-auto min-h-[200px]">
                 <div>
                   <span className="text-neutral-400 text-xs font-mono tracking-widest block mb-1">
                     /01
@@ -535,7 +535,7 @@ export default function StorePage() {
                     Collection<br />
                     Signature
                   </h3>
-                  <p className="text-neutral-500 text-xs leading-relaxed mb-4">
+                  <p className="text-neutral-500 text-xs leading-relaxed mb-4 line-clamp-2 md:line-clamp-none">
                     Associez le savoir-faire de l'artisanat marocain et la rigueur technique des tissus d'exception. Idéal pour vos comités d'accueil.
                   </p>
                   <div className="flex gap-1.5 mb-4">
@@ -559,7 +559,7 @@ export default function StorePage() {
               </div>
 
               {/* Card 2: Bon de Commande Autonomous Generator */}
-              <div className="bg-[#3B82F6]/5 border border-[#3B82F6]/10 rounded-3xl p-8 flex flex-col justify-between h-[250px]">
+              <div className="bg-[#3B82F6]/5 border border-[#3B82F6]/10 rounded-3xl md:p-8 p-5 flex flex-col justify-between md:h-[250px] h-auto min-h-[160px]">
                 <div>
                   <span className="text-[#3B82F6] text-xs font-mono tracking-widest block mb-1 font-bold">
                     /02
