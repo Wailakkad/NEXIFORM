@@ -49,18 +49,15 @@ export default function AboutPage() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        phone: '',
-        sector: 'Medical',
-        message: ''
-      });
-    }, 4500);
+    const msg = `*Nouveau Projet B2B - NEXIFORM*
+*Nom:* ${formData.name}
+*Email:* ${formData.email}
+*Société:* ${formData.company}
+*Téléphone:* ${formData.phone || 'Non renseigné'}
+*Secteur:* ${formData.sector}
+*Message:* ${formData.message}`;
+    const url = `https://wa.me/212660763128?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
   };
 
   const sectorsList = [
@@ -75,15 +72,15 @@ export default function AboutPage() {
       id: 'hotellerie',
       title: 'Hôtellerie & Restauration',
       description: 'Costumes sur-mesure, tabliers en lin premium et vestes de chef alliant haute prestance et confort extrême.',
-      image: 'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=600',
+      image: 'https://res.cloudinary.com/fnxxj10k/image/upload/v1782920770/gilet_cafe_3_cu2nc8.jpg',
       features: ['Anti-froissement', 'Finitions broderie d\'or', 'Confort stretch']
     },
     {
-      id: 'corporate',
-      title: 'Corporate & Accueil',
-      description: 'Tailleurs, chemises oxford de haute tenue et accessoires corporate personnalisés pour cadres et hôtesses.',
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600',
-      features: ['Coton égyptien double retors', 'Ajustements personnalisés', 'Tissu respirant']
+      id: 'nettoyage',
+      title: 'Nettoyage & Entretien',
+      description: 'Tabliers résistants et uniformes fonctionnels pour les professionnels du nettoyage et de l\'entretien. Conçus pour une utilisation intensive en milieu professionnel.',
+      image: 'https://res.cloudinary.com/fnxxj10k/image/upload/v1782927939/uniforme_de_neto_4P_wsahrp.jpg',
+      features: ['Résistant aux produits chimiques', 'Tissu imperméable', 'Personnalisation logo disponible']
     },
     {
       id: 'technique',
@@ -262,7 +259,7 @@ export default function AboutPage() {
                 <div>
                   <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">Ligne Commerciale Directe</h4>
                   <p className="text-xs text-neutral-500 mt-1">
-                    +212 (0) 522 45 88 90
+                    0660763128
                   </p>
                 </div>
               </div>
@@ -274,7 +271,7 @@ export default function AboutPage() {
                 <div>
                   <h4 className="text-xs font-bold text-[#0F172A] uppercase tracking-wider">Service Commercial Grands Comptes</h4>
                   <p className="text-xs text-neutral-500 mt-1">
-                    b2b@nexiform.ma
+                    nexiformatelier@gmail.com
                   </p>
                 </div>
               </div>
@@ -351,7 +348,7 @@ export default function AboutPage() {
                   Secteur de votre Projet *
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {['Medical', 'Hotellerie', 'Corporate', 'Technique'].map((sec) => (
+                  {['Medical', 'Hotellerie', 'Nettoyage', 'Technique'].map((sec) => (
                     <button
                       key={sec}
                       type="button"

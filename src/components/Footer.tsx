@@ -10,9 +10,7 @@ import {
   ChevronUp, 
   Check, 
   Send,
-  Linkedin,
-  Instagram,
-  MessageSquare
+  Linkedin
 } from 'lucide-react';
 
 export default function Footer() {
@@ -122,28 +120,12 @@ export default function Footer() {
             {/* Social Handles */}
             <div className="flex items-center gap-3 mt-2">
               <a 
-                href="https://linkedin.com" 
+                href="https://www.linkedin.com/company/nexiform/?viewAsMember=true" 
                 target="_blank" 
                 rel="noreferrer" 
                 className="w-9 h-9 rounded-full bg-white/5 hover:bg-[#3B82F6] hover:text-white text-white/50 flex items-center justify-center transition-all duration-300"
               >
                 <Linkedin className="w-4 h-4" />
-              </a>
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="w-9 h-9 rounded-full bg-white/5 hover:bg-[#3B82F6] hover:text-white text-white/50 flex items-center justify-center transition-all duration-300"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a 
-                href="https://wa.me/212661000000" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="w-9 h-9 rounded-full bg-white/5 hover:bg-[#25D366] hover:text-white text-white/50 flex items-center justify-center transition-all duration-300"
-              >
-                <MessageSquare className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -226,11 +208,11 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#3B82F6] shrink-0" />
-                <span>+212 (0) 522 45 88 90</span>
+                <span>0660763128</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#3B82F6] shrink-0" />
-                <span>b2b@nexiform.ma</span>
+                <span>nexiformatelier@gmail.com</span>
               </div>
               <div className="text-[11px] font-mono uppercase tracking-wider text-[#3B82F6]/80 bg-[#3B82F6]/5 p-2 rounded border border-[#3B82F6]/10 w-full text-center mt-1">
                 Lun - Ven: 9h00 - 18h30
