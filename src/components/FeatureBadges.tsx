@@ -2,23 +2,37 @@ import { Check } from 'lucide-react';
 
 const BADGES = [
   { text: 'Broderie professionnelle' },
-  { text: 'Livraison nationale' },
   { text: 'Fabrication sur mesure' },
+  { text: 'Livraison nationale' },
 ];
 
 export default function FeatureBadges() {
   return (
-    <div className="flex flex-wrap gap-x-6 gap-y-2.5 md:justify-start justify-center">
-      {BADGES.map((badge) => (
-        <div key={badge.text} className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-[#3B82F6]/15 flex items-center justify-center flex-shrink-0">
-            <Check className="w-2.5 h-2.5 text-[#3B82F6]" strokeWidth={3} />
-          </div>
-          <span className="text-white/50 text-[11px] font-medium tracking-wide uppercase">
+    <>
+      {/* Mobile: inline check + text, horizontal scroll, no pills */}
+      <div className="flex lg:hidden items-center gap-3 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        {BADGES.map((badge) => (
+          <span
+            key={badge.text}
+            className="inline-flex items-center gap-1.5 whitespace-nowrap text-[11px] tracking-[0.05em] text-white"
+          >
+            <Check className="w-3 h-3 text-[#3B82F6] shrink-0" strokeWidth={3} />
             {badge.text}
           </span>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+
+      {/* Desktop: pill tags with border */}
+      <div className="hidden lg:flex flex-wrap items-center gap-2">
+        {BADGES.map((badge) => (
+          <span
+            key={badge.text}
+            className="px-3.5 py-[5px] text-[11px] tracking-[0.06em] text-white border border-white/30 rounded-full uppercase leading-none"
+          >
+            {badge.text}
+          </span>
+        ))}
+      </div>
+    </>
   );
 }
