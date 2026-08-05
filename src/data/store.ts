@@ -1491,6 +1491,97 @@ export const storeData: StoreData = {
         "Personnalisation logo disponible"
       ],
       "gender": "mixte"
+    },
+    {
+      id: "TAB-019",
+      sku: "NX-TAB-019",
+      industry: "restauration",
+      wear_category: "tablier",
+      slug: "barista-pro-noir-edition",
+      name: "Barista Pro™ Noir Edition",
+      price: 159,
+      color: "Noir",
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785964430/image_4.jpg",
+      description: "Tablier café professionnel noir, alliant élégance et robustesse pour un usage quotidien intensif en restauration.",
+      features: ["Tissu résistant", "Sangles réglables", "Poches fonctionnelles"]
+    },
+    {
+      id: "TAB-020",
+      sku: "NX-TAB-020",
+      industry: "restauration",
+      wear_category: "tablier",
+      slug: "barista-pro-gris-edition",
+      name: "Barista Pro™ Gris Edition",
+      price: 149,
+      color: "Gris",
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785964435/image_1.jpg",
+      description: "Tablier gris moderne, design épuré et confort longue durée pour cafés et restaurants contemporains.",
+      features: ["Design minimal", "Tissu robuste", "Durabilité accrue"]
+    },
+    {
+      id: "TAB-021",
+      sku: "NX-TAB-021",
+      industry: "restauration",
+      wear_category: "tablier",
+      slug: "barista-pro-jeans-edition",
+      name: "Barista Pro™ Jeans Edition",
+      price: 179,
+      color: "Jeans",
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785964437/image_7.jpg",
+      description: "Edition denim robuste au style contemporain, conçue pour les établissements artisanaux et premium.",
+      features: ["Denim renforcé", "Style barista", "Haute résistance"]
+    },
+    {
+      id: "TAB-022",
+      sku: "NX-TAB-022",
+      industry: "restauration",
+      wear_category: "tablier",
+      slug: "barista-pro-vert-militaire-edition",
+      name: "Barista Pro™ Vert Militaire Edition",
+      price: 169,
+      color: "Vert Militaire",
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785964443/image_2.jpg",
+      description: "Look robuste et distinctif pour restaurants modernes, tissu renforcé adapté aux environnements exigeants.",
+      features: ["Tissu renforcé", "Structure solide", "Usage intensif"]
+    },
+    {
+      id: "TAB-023",
+      sku: "NX-TAB-023",
+      industry: "restauration",
+      wear_category: "tablier",
+      slug: "barista-pro-bleu-ciel-edition",
+      name: "Barista Pro™ Bleu Ciel Edition",
+      price: 149,
+      color: "Bleu Ciel",
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785964445/image_3.jpg",
+      description: "Couleur fraîche et moderne pour établissements élégants, confort optimal et tissu respirant.",
+      features: ["Confort optimal", "Tissu respirant", "Coupe moderne"]
+    },
+    {
+      id: "TAB-024",
+      sku: "NX-TAB-024",
+      industry: "restauration",
+      wear_category: "tablier",
+      slug: "barista-pro-bordeaux-edition",
+      name: "Barista Pro™ Bordeaux Edition",
+      price: 159,
+      color: "Bordeaux",
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785964449/image_6.jpg",
+      description: "Tablier bordeaux chic pour une image raffinée et une présence professionnelle affirmée.",
+      features: ["Teinte haut de gamme", "Poches renforcées", "Facile d'entretien"]
+    },
+    {
+      id: "TAB-025",
+      sku: "NX-TAB-025",
+      industry: "restauration",
+      wear_category: "tablier",
+      slug: "barista-pro-blanc-edition",
+      name: "Barista Pro™ Blanc Edition",
+      price: 149,
+      color: "Blanc",
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785964452/image_5.jpg",
+      description: "Tablier blanc épuré, idéal pour une image soignée dans les établissements haut de gamme.",
+      features: ["Tissu facile d'entretien", "Style minimal", "Confort longue durée"]
     }
   ]
 };
