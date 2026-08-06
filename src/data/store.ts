@@ -21,6 +21,8 @@ export interface Product {
   image: string;
   description: string;
   features: string[];
+  productType?: 'vetements' | 'accessoire';
+  accessory_category?: string;
   gender?: 'femme' | 'homme' | 'mixte';
 }
 
@@ -48,6 +50,7 @@ export const storeData: StoreData = {
     { id: "jacket-pantalon", name: "Veste & Pantalon (EPI)" },
     { id: "combinaison", name: "Combinaison (EPI)" },
     { id: "gilet", name: "Gilet Technique (EPI)" },
+    { id: "polo", name: "Polo Technique (EPI)" },
     { id: "tablier", name: "Tablier Professionnel" },
     { id: "gilet-cafe", name: "Gilet Café" },
     { id: "uniforme", name: "Uniforme Nettoyage" }
@@ -985,6 +988,217 @@ export const storeData: StoreData = {
       features: ["Bandes réfléchissantes haute densité", "Double couture renforcée", "Ergonomie de pointe"]
     },
     {
+      id: "EPI-A01",
+      sku: "NX-EPI-ACC-CASQ-J",
+      industry: "epi",
+      wear_category: "accessoire",
+      accessory_category: "Casque de sécurité",
+      slug: "casque-securite-pro-jaune",
+      name: "Casque de Sécurité Pro – Jaune",
+      color: "Jaune",
+      price: 129,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786046278/Casque_de_S%C3%A9curit%C3%A9_Pro_Jaune.jpg",
+      description: "Casque de sécurité professionnel à coque ABS renforcée, jugulaire réglable et taille ajustable. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Coque ABS renforcée", "Jugulaire réglable", "Conforme normes EPI", "Réglage de taille intégré"],
+      productType: "accessoire"
+    },
+    {
+      id: "EPI-A02",
+      sku: "NX-EPI-ACC-CASQ-B",
+      industry: "epi",
+      wear_category: "accessoire",
+      accessory_category: "Casque de sécurité",
+      slug: "casque-securite-pro-blanc",
+      name: "Casque de Sécurité Pro – Blanc",
+      color: "Blanc",
+      price: 149,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786046270/Casque_de_S%C3%A9curit%C3%A9_Pro_Blanc.jpg",
+      description: "Casque de chantier blanc à coque haute résistance, pour environnements techniques exigeants. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Coque haute résistance", "Porte-lanterne intégré", "Confort longue durée"],
+      productType: "accessoire"
+    },
+    {
+      id: "EPI-A03",
+      sku: "NX-EPI-ACC-LUN",
+      industry: "epi",
+      wear_category: "accessoire",
+      accessory_category: "Lunettes de protection",
+      slug: "lunettes-protection-anti-buee",
+      name: "Lunettes de Protection Anti-Buée",
+      color: "Transparent",
+      price: 49,
+      image: "https://picsum.photos/seed/nexiform-lunettes/600/800",
+      description: "Lunettes de sécurité anti-buée avec protection latérale intégrée, légères et confortables. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Traitement anti-buée", "Protection latérale", "Léger et confortable"],
+      productType: "accessoire"
+    },
+    {
+      id: "EPI-A04",
+      sku: "NX-EPI-ACC-GNT",
+      industry: "epi",
+      wear_category: "accessoire",
+      accessory_category: "Gants de protection",
+      slug: "gants-travail-renforces",
+      name: "Gants de Travail Renforcés",
+      color: "Gris",
+      price: 59,
+      image: "https://picsum.photos/seed/nexiform-gants/600/800",
+      description: "Gants de travail techniques à paume renforcée et poignets ajustables pour usage intensif. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Paume renforcée", "Poignets ajustables", "Bonne préhension"],
+      productType: "accessoire"
+    },
+    {
+      id: "EPI-A05",
+      sku: "NX-EPI-ACC-PA",
+      industry: "epi",
+      wear_category: "accessoire",
+      accessory_category: "Protection auditive",
+      slug: "protection-auditive-coquilles",
+      name: "Protection Auditive – Coquilles",
+      color: "Jaune",
+      price: 89,
+      image: "https://picsum.photos/seed/nexiform-auditive/600/800",
+      description: "Protection auditive à coquilles avec arceau réglable, réduction du bruit optimale en atelier. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Arceau réglable", "Réduction du bruit optimale", "Confort prolongé"],
+      productType: "accessoire"
+    },
+    {
+      id: "EPI-A06",
+      sku: "NX-EPI-ACC-HARN",
+      industry: "epi",
+      wear_category: "accessoire",
+      accessory_category: "Harnais de sécurité",
+      slug: "harnais-securite-antichute",
+      name: "Harnais de Sécurité Antichute",
+      color: "Orange",
+      price: 299,
+      image: "https://picsum.photos/seed/nexiform-harnais/600/800",
+      description: "Harnais antichute professionnel à sangles renforcées et points d'ancrage multiples. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Points d'ancrage multiples", "Sangles renforcées", "Conforme normes EPI"],
+      productType: "accessoire"
+    },
+    {
+      id: "EPI-A07",
+      sku: "NX-EPI-ACC-MASQ",
+      industry: "epi",
+      wear_category: "accessoire",
+      accessory_category: "Masque & respiratoire",
+      slug: "masque-anti-poussiere-ffp2",
+      name: "Masque Anti-Poussière FFP2",
+      color: "Blanc",
+      price: 19,
+      image: "https://picsum.photos/seed/nexiform-masque/600/800",
+      description: "Masque de protection respiratoire FFP2 pliable, filtration certifiée pour chantiers et ateliers. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Filtration certifiée FFP2", "Pliable", "Bandeau nasal ajustable"],
+      productType: "accessoire"
+    },
+    {
+      id: "EPI-A08",
+      sku: "NX-EPI-ACC-CHS",
+      industry: "epi",
+      wear_category: "accessoire",
+      accessory_category: "Chaussures de sécurité",
+      slug: "chaussures-securite-s3",
+      name: "Chaussures de Sécurité S3",
+      color: "Noir",
+      price: 349,
+      image: "https://picsum.photos/seed/nexiform-chaussures/600/800",
+      description: "Chaussures de sécurité S3 à embout composite, semelle anti-perforation et antidérapante. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Embout composite", "Semelle anti-perforation", "Antidérapante SRC"],
+      productType: "accessoire"
+    },
+    {
+      id: "EPI-POLO-01",
+      sku: "NX-EPI-POLO-01",
+      industry: "epi",
+      wear_category: "polo",
+      slug: "polo-technique-epi-bleu-01",
+      name: "Polo Technique EPI – Bleu 01",
+      color: "Bleu",
+      price: 179,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786045587/WhatsApp_Image_2026-08-06_at_18.09.00_1.jpg",
+      description: "Polo technique professionnel pour environnements EPI, tissu respirant et coupe ergonomique. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Tissu respirant", "Coupe ergonomique", "Entretien facile"]
+    },
+    {
+      id: "EPI-POLO-02",
+      sku: "NX-EPI-POLO-02",
+      industry: "epi",
+      wear_category: "polo",
+      slug: "polo-technique-epi-noir",
+      name: "Polo Technique EPI – Noir",
+      color: "Noir",
+      price: 179,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786045587/polo_1.jpg",
+      description: "Polo technique professionnel noir, résistant et adapté à un usage quotidien intensif. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Tissu résistant", "Anti-froissage", "Durabilité accrue"]
+    },
+    {
+      id: "EPI-POLO-03",
+      sku: "NX-EPI-POLO-03",
+      industry: "epi",
+      wear_category: "polo",
+      slug: "polo-technique-epi-blanc",
+      name: "Polo Technique EPI – Blanc",
+      color: "Blanc",
+      price: 179,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786045587/polo_2.jpg",
+      description: "Polo blanc épuré pour équipes techniques, confort et élégance au quotidien. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Tissu léger", "Style minimal", "Confort optimal"]
+    },
+    {
+      id: "EPI-POLO-04",
+      sku: "NX-EPI-POLO-04",
+      industry: "epi",
+      wear_category: "polo",
+      slug: "polo-technique-epi-gris",
+      name: "Polo Technique EPI – Gris",
+      color: "Gris",
+      price: 179,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786045587/polo_4.jpg",
+      description: "Polo technique gris moderne pour un rendu sobre et professionnel en milieu industriel. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Teinte sobre", "Respirant", "Coupe moderne"]
+    },
+    {
+      id: "EPI-POLO-05",
+      sku: "NX-EPI-POLO-05",
+      industry: "epi",
+      wear_category: "polo",
+      slug: "polo-technique-epi-anthracite",
+      name: "Polo Technique EPI – Anthracite",
+      color: "Anthracite",
+      price: 179,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786045587/polo_3.jpg",
+      description: "Polo anthracite haut de gamme, conçu pour les techniciens exigeants. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Teinte premium", "Structure renforcée", "Haute résistance"]
+    },
+    {
+      id: "EPI-POLO-06",
+      sku: "NX-EPI-POLO-06",
+      industry: "epi",
+      wear_category: "polo",
+      slug: "polo-technique-epi-rouge",
+      name: "Polo Technique EPI – Rouge",
+      color: "Rouge",
+      price: 179,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786045587/polo_5.jpg",
+      description: "Polo rouge dynamique pour équipes terrain, haute visibilité et confort durable. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Coloris vif", "Confort longue durée", "Usage intensif"]
+    },
+    {
+      id: "EPI-POLO-07",
+      sku: "NX-EPI-POLO-07",
+      industry: "epi",
+      wear_category: "polo",
+      slug: "polo-technique-epi-bleu-02",
+      name: "Polo Technique EPI – Bleu Saphir",
+      color: "Bleu Saphir",
+      price: 179,
+      image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1786045588/polo_6.jpg",
+      description: "Polo bleu saphir élégant, conjuguant style professionnel et technicité. (Donnée d'aperçu – sera remplacée par les données réelles du catalogue)",
+      features: ["Tissu premium", "Image professionnelle", "Durabilité maximale"]
+    },
+    {
       id: "MED-051",
       sku: "NX-MED-M-BC1",
       industry: "medical",
@@ -1738,6 +1952,46 @@ export const storeData: StoreData = {
       image: "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785965521/image_19.jpg",
       description: "Tablier noir matte moderne et raffiné, parfait pour les établissements haut de gamme.",
       features: ["Finition matte", "Coupe moderne", "Haute résistance"]
+    },
+    {
+      "id": "NET-005",
+      "sku": "NX-NET-TBL-NR",
+      "industry": "nettoyage",
+      "wear_category": "tablier",
+      "slug": "tablier-nettoyage-noir",
+      "name": "Tablier Professionnel Nettoyage – Noir",
+      "color": "Noir",
+      "price": 149,
+      "image": "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785967468/cleaning_2.jpg",
+      "description": "Tablier de nettoyage noir professionnel, robuste et résistant aux produits chimiques. Idéal pour les équipes d'entretien intervenant en entreprise et hôtellerie.",
+      "features": [
+        "Résistant aux produits chimiques",
+        "Tissu imperméable",
+        "Poches fonctionnelles",
+        "Résistant aux taches",
+        "Personnalisation logo disponible"
+      ],
+      "gender": "mixte"
+    },
+    {
+      "id": "NET-006",
+      "sku": "NX-NET-TBL-MR",
+      "industry": "nettoyage",
+      "wear_category": "tablier",
+      "slug": "tablier-nettoyage-marron",
+      "name": "Tablier Professionnel Nettoyage – Marron",
+      "color": "Marron",
+      "price": 149,
+      "image": "https://res.cloudinary.com/dhkyla1rv/image/upload/v1785967468/cleaning_1.jpg",
+      "description": "Tablier de nettoyage marron élégant et discret, conçu pour une utilisation intensive en milieu professionnel avec une image soignée.",
+      "features": [
+        "Tissu résistant haute durabilité",
+        "Imperméable aux éclaboussures",
+        "Coupe ajustable",
+        "Lavable en machine",
+        "Personnalisation logo disponible"
+      ],
+      "gender": "mixte"
     }
   ]
 };

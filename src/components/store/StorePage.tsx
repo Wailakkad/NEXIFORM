@@ -35,6 +35,19 @@ export default function StorePage() {
     }
   });
 
+  const [selectedAccessories, setSelectedAccessories] = useState<string[]>(() => {
+    const params = getHashQueryParams();
+    const accParam = params.get('accessories');
+    if (accParam) return accParam.split(',').filter(Boolean);
+
+    try {
+      const saved = localStorage.getItem('nexiform_store_selectedAccessories');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [selectedGender, setSelectedGender] = useState<string>(() => {
     const params = getHashQueryParams();
     const genParam = params.get('gender');
@@ -87,6 +100,24 @@ export default function StorePage() {
   }, [selectedCategories]);
 
   useEffect(() => {
+    localStorage.setItem('nexiform_store_selectedAccessories', JSON.stringify(selectedAccessories));
+    
+    const hash = window.location.hash.split('?')[0];
+    const params = getHashQueryParams();
+    if (selectedAccessories.length > 0) {
+      params.set('accessories', selectedAccessories.join(','));
+    } else {
+      params.delete('accessories');
+    }
+    
+    const paramsStr = params.toString();
+    const newHash = paramsStr ? `${hash}?${paramsStr}` : hash;
+    if (window.location.hash !== newHash) {
+      window.history.replaceState(null, '', newHash);
+    }
+  }, [selectedAccessories]);
+
+  useEffect(() => {
     localStorage.setItem('nexiform_store_selectedGender', selectedGender);
     
     const hash = window.location.hash.split('?')[0];
@@ -128,23 +159,26 @@ export default function StorePage() {
       const params = getHashQueryParams();
       const indParam = params.get('industry') || 'all';
       const catParam = params.get('categories') ? (params.get('categories')?.split(',').filter(Boolean) || []) : [];
+      const accParam = params.get('accessories') ? (params.get('accessories')?.split(',').filter(Boolean) || []) : [];
       const genParam = params.get('gender') || 'all';
       const qParam = params.get('q') || '';
 
       if (selectedIndustry !== indParam) setSelectedIndustry(indParam);
       if (JSON.stringify(selectedCategories) !== JSON.stringify(catParam)) setSelectedCategories(catParam);
+      if (JSON.stringify(selectedAccessories) !== JSON.stringify(accParam)) setSelectedAccessories(accParam);
       if (selectedGender !== genParam) setSelectedGender(genParam);
       if (searchQuery !== qParam) setSearchQuery(qParam);
     };
 
     window.addEventListener('hashchange', syncFromHash);
     return () => window.removeEventListener('hashchange', syncFromHash);
-  }, [selectedIndustry, selectedCategories, selectedGender, searchQuery]);
+  }, [selectedIndustry, selectedCategories, selectedAccessories, selectedGender, searchQuery]);
 
   // Custom interactive dropdown state for minimalist pills
   const [industryOpen, setIndustryOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [genderOpen, setGenderOpen] = useState(false);
+  const [accessoriesOpen, setAccessoriesOpen] = useState(false);
 
   // Home navigation handler
   const handleGoHome = (e: React.MouseEvent) => {
@@ -164,15 +198,18 @@ export default function StorePage() {
     return storeData.products.filter((product) => {
       const matchesIndustry = selectedIndustry === 'all' || product.industry === selectedIndustry;
       const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.wear_category);
+      const matchesAccessory = selectedIndustry !== 'epi' || selectedAccessories.length === 0 || 
+                               (product.productType === 'accessoire' && !!product.accessory_category && 
+                                selectedAccessories.includes(product.accessory_category));
       const matchesGender = selectedGender === 'all' || 
                             product.gender === selectedGender ||
                             (product.industry !== 'medical'); // only filter gender inside medical, keep other industries fully visible
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            product.color.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            (product.color || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                             product.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesIndustry && matchesCategory && matchesGender && matchesSearch;
+      return matchesIndustry && matchesCategory && matchesAccessory && matchesGender && matchesSearch;
     });
-  }, [selectedIndustry, selectedCategories, selectedGender, searchQuery]);
+  }, [selectedIndustry, selectedCategories, selectedAccessories, selectedGender, searchQuery]);
 
   // Stagger animate products on load or filter change
   useGSAP(() => {
@@ -188,6 +225,7 @@ export default function StorePage() {
     setSelectedIndustry('all');
     setSelectedCategories([]);
     setSelectedGender('all');
+    setSelectedAccessories([]);
     setSearchQuery('');
   };
 
@@ -196,6 +234,14 @@ export default function StorePage() {
       setSelectedCategories(selectedCategories.filter((id) => id !== catId));
     } else {
       setSelectedCategories([...selectedCategories, catId]);
+    }
+  };
+
+  const handleAccessoryToggle = (accId: string) => {
+    if (selectedAccessories.includes(accId)) {
+      setSelectedAccessories(selectedAccessories.filter((id) => id !== accId));
+    } else {
+      setSelectedAccessories([...selectedAccessories, accId]);
     }
   };
 
@@ -214,6 +260,18 @@ export default function StorePage() {
         .map(p => p.wear_category)
     );
     return storeData.wear_categories.filter(cat => activeCatIds.has(cat.id));
+  }, [selectedIndustry]);
+
+  // Accessory categories exposed only inside the EPI industry filter
+  const visibleAccessories = useMemo(() => {
+    if (selectedIndustry !== 'epi') return [];
+    const accSet = new Set<string>();
+    for (const p of storeData.products) {
+      if (p.industry === 'epi' && p.productType === 'accessoire' && p.accessory_category) {
+        accSet.add(p.accessory_category);
+      }
+    }
+    return Array.from(accSet);
   }, [selectedIndustry]);
 
   // Dynamically configure the hero banner content based on selected industry
@@ -374,7 +432,7 @@ export default function StorePage() {
               {industryOpen && (
                 <div className="absolute top-12 left-0 z-50 w-56 bg-white border border-neutral-100 rounded-2xl shadow-xl p-2 flex flex-col gap-1">
                   <button
-                    onClick={() => { setSelectedIndustry('all'); setSelectedCategories([]); setSelectedGender('all'); setIndustryOpen(false); }}
+                    onClick={() => { setSelectedIndustry('all'); setSelectedCategories([]); setSelectedGender('all'); setSelectedAccessories([]); setIndustryOpen(false); }}
                     className="w-full text-left h-9 px-3 rounded-lg text-xs font-semibold flex items-center justify-between hover:bg-neutral-50"
                   >
                     <span>Tous les secteurs</span>
@@ -383,7 +441,7 @@ export default function StorePage() {
                   {storeData.industries.map((ind) => (
                     <button
                       key={ind.id}
-                      onClick={() => { setSelectedIndustry(ind.id); setSelectedCategories([]); setSelectedGender('all'); setIndustryOpen(false); }}
+                      onClick={() => { setSelectedIndustry(ind.id); setSelectedCategories([]); setSelectedGender('all'); setSelectedAccessories([]); setIndustryOpen(false); }}
                       className="w-full text-left h-9 px-3 rounded-lg text-xs font-semibold flex items-center justify-between hover:bg-neutral-50"
                     >
                       <span>{ind.name}</span>
@@ -430,6 +488,44 @@ export default function StorePage() {
               )}
             </div>
 
+            {/* Accessoires Filter Dropdown (visible only in EPI sector) */}
+            {selectedIndustry === 'epi' && visibleAccessories.length > 0 && (
+              <div className="relative">
+                <button
+                  onClick={() => { setAccessoriesOpen(!accessoriesOpen); setIndustryOpen(false); setCategoryOpen(false); setGenderOpen(false); }}
+                  className={`h-10 px-4 rounded-full border text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all duration-200 ${
+                    selectedAccessories.length > 0 
+                      ? 'border-[#0F172A] bg-[#0F172A] text-white' 
+                      : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300'
+                  }`}
+                >
+                  <span>Accessoires ({selectedAccessories.length})</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accessoriesOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {accessoriesOpen && (
+                  <div className="absolute top-12 left-0 z-50 w-64 bg-white border border-neutral-100 rounded-2xl shadow-xl p-3 flex flex-col gap-2">
+                    <span className="text-[10px] font-mono uppercase text-neutral-400 block mb-1">Sélectionnez les accessoires EPI :</span>
+                    {visibleAccessories.map((acc) => {
+                      const isSelected = selectedAccessories.includes(acc);
+                      return (
+                        <button
+                          key={acc}
+                          onClick={() => handleAccessoryToggle(acc)}
+                          className="w-full text-left h-9 px-3 rounded-lg text-xs font-semibold flex items-center justify-between hover:bg-neutral-50 transition-colors"
+                        >
+                          <span className={isSelected ? 'text-[#3B82F6] font-bold' : 'text-neutral-700'}>{acc}</span>
+                          <div className={`w-4 h-4 rounded flex items-center justify-center border ${isSelected ? 'border-[#3B82F6] bg-[#3B82F6] text-white' : 'border-neutral-300'}`}>
+                            {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Sexe Filter Dropdown Trigger */}
             <div className="relative">
               <button
@@ -473,7 +569,7 @@ export default function StorePage() {
             </div>
 
             {/* Clear Filters indicator */}
-            {(selectedIndustry !== 'all' || selectedCategories.length > 0 || selectedGender !== 'all' || searchQuery !== '') && (
+            {(selectedIndustry !== 'all' || selectedCategories.length > 0 || selectedAccessories.length > 0 || selectedGender !== 'all' || searchQuery !== '') && (
               <button
                 onClick={handleResetFilters}
                 className="h-10 px-4 rounded-full border border-dashed border-red-200 hover:border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all duration-200"
@@ -482,6 +578,7 @@ export default function StorePage() {
                 Effacer ({[
                   selectedIndustry !== 'all' ? 1 : 0,
                   selectedCategories.length,
+                  selectedAccessories.length,
                   selectedGender !== 'all' ? 1 : 0,
                   searchQuery !== '' ? 1 : 0
                 ].reduce((a, b) => a + b, 0)})
@@ -640,7 +737,7 @@ export default function StorePage() {
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-1.5">
                         <span className="text-neutral-400 text-[10px] font-mono tracking-wider uppercase font-semibold">
-                          {product.wear_category}
+                          {product.accessory_category || product.wear_category}
                         </span>
                         
                         {/* Rating stars exactly mimicking lookbook styling */}
